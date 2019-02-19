@@ -1,0 +1,11 @@
+{
+  "name": "employees-tracker-server",
+  "version": "0.0.1",
+  "description": "Server application for listening requests from employees tracker clients.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alex Zaychenko <zaychenko96y@outlook.com>",
+  "license": "MIT"
+}
