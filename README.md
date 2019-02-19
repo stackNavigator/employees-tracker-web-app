@@ -1,4 +1,4 @@
-# Employees Desktop Tracker
+# Employees Tracker Server
 
 > Server application for listening requests from employees tracker clients.
 
