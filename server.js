@@ -10,7 +10,7 @@ express()
   .disable('x-powered-by')
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true}))
-  .use('/', (_, res) => res.status(200).json({ message: 'nice!'}))
+  .get('/', (_, res) => res.status(200).json({ message: 'nice!'}))
   .use((_, res, __) => {
     return res.status(404).json({
       message: 'Resource was not found.'
