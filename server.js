@@ -2,7 +2,6 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
-require('dotenv').config()
 const { connectToDb } = require('./services/init-db')
 
 ;(async () => {
@@ -10,7 +9,7 @@ const { connectToDb } = require('./services/init-db')
     const { PORT, DB_URI, DB_NAME } = process.env
     const db = await connectToDb(DB_URI, DB_NAME)
     const rofl = await db.collection('employees').countDocuments()
-    
+
     express()
       .use(cors())
       .disable('x-powered-by')
