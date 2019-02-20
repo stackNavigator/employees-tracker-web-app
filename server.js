@@ -10,7 +10,7 @@ express()
   .disable('x-powered-by')
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true}))
-  .use('/home', (_, res) => res.status(200).json({ message: 'nice!'}))
+  .use('/', (_, res) => res.status(200).json({ message: 'nice!'}))
   .use((_, res, __) => {
     return res.status(404).json({
       message: 'Resource was not found.'
@@ -18,7 +18,6 @@ express()
   })
   .listen(PORT, err => {
     if (!err) {
-      console.profile('rofl')
       console.log(`Server successfully runs on port ${PORT}\n`)
     }
   })
