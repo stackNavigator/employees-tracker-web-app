@@ -8,7 +8,6 @@ module.exports = {
         .skip(0)
         .limit(0)
         .toArray()
-      normalizeFilePath(employees)
       return employees
     }
     catch (err) {
