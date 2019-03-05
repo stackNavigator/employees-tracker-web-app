@@ -1,5 +1,3 @@
-const { copyFile, normalizeFilePath, createFilePath } = require('../services/file-manager')
-
 module.exports = {
   async getEmployees(dbClient) {
     try {
@@ -16,10 +14,6 @@ module.exports = {
   },
   async addEmployee (dbClient, doc) {
     try {
-      const { path, name } = doc.image
-      const uploadPath = createFilePath(name)
-      doc.image = uploadPath
-      copyFile(path, uploadPath)
       return (await dbClient.collection('employees')
         .insertOne(doc)).insertedId
     }
