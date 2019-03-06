@@ -9,7 +9,6 @@ module.exports = db => Router()
     })
   })
   .post('/', async (req, res) => {
-    console.log(req.body)
     const { name, surname, secondName, position } = req.body
     return res.status(201).json({
       insertedId: await addEmployee(db, {
