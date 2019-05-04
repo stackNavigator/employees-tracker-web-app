@@ -1,6 +1,6 @@
 const { Router } = require('express')
 
-const { getEmployees, addEmployee } = require('../services/crud-db')
+const CrudDb = require('../services/crud-db')
 
 module.exports = db => Router()
   .get('/', async (_, res) => {

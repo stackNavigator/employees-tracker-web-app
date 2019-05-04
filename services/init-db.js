@@ -1,15 +1,14 @@
 const { MongoClient } = require('mongodb')
 
 module.exports = {
-  async connectToDb(uri, dbName) {
+  async connectToDb(uri) {
     try {
-      const mongoClient = await MongoClient.connect(uri, {
+      return await MongoClient.connect(uri, {
         useNewUrlParser: true
       })
-      return mongoClient.db(dbName)
     }
-    catch (err) {
-      console.log(err)
+    catch (error) {
+      console.error(error)
     }
   }
 }

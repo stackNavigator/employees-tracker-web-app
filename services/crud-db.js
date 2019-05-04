@@ -1,24 +1,27 @@
-module.exports = {
-  async getEmployees(dbClient) {
+module.exports = class {
+  constructor (dbClient, collectionName) {
+    this.dbClient = dbClient
+    this.collectionName = collectionName
+  }
+
+  async getEmployees () {
     try {
-      const employees = await dbClient.collection('employees')
+      const employees = await this.dbClient.collection('employees')
         .find()
-        .skip(0)
-        .limit(0)
         .toArray()
       return employees
     }
-    catch (err) {
-      console.log(err)
+    catch (error) {
+      console.error(error)
     }
-  },
-  async addEmployee (dbClient, doc) {
+  }
+  async addEmployee (doc) {
     try {
-      return (await dbClient.collection('employees')
+      return (await this.dbClient.collection('employees')
         .insertOne(doc)).insertedId
     }
-    catch (err) {
-      console.log(err)
+    catch (error) {
+      console.error(error)
     }
   }
 }

@@ -7,9 +7,10 @@ const initRoutes = require('./routes')
 
 ;(async () => {
   try {
-    const { PORT, DB_URI, DB_NAME } = process.env
-    const db = await connectToDb(DB_URI, DB_NAME)
-
+    require('dotenv').config()
+    const { PORT, DB_URI } = process.env
+    const db = await connectToDb(DB_URI)
+    
     express()
       .use(cors())
       .disable('x-powered-by')
@@ -21,13 +22,9 @@ const initRoutes = require('./routes')
           message: 'Resource was not found.'
         })
       })
-      .listen(PORT, err => {
-        if (!err) {
-          console.log(`Server successfully runs on port ${PORT}\n`)
-        }
-      })
+      .listen(PORT, () => console.log(`Server successfully runs on port ${PORT}\n`))
   }
-  catch (err) {
-    console.log(err)
+  catch (error) {
+    console.error(error)
   }
 })()

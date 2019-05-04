@@ -1,18 +1,21 @@
 {
-  "name": "employees-tracker-server",
+  "name": "employees-tracker-web-app",
   "version": "0.0.1",
-  "description": "Server application for listening requests from employees tracker clients.",
+  "description": "Web app purposed for tracking employees.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
-  "author": "Alex Zaychenko <zaychenko96y@outlook.com>",
+  "author": "Oleksandr Zaychenko <zaychenko96y@outlook.com>",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "mongodb": "^3.1.13"
+  },
+  "devDependencies": {
+    "dotenv": "^8.0.0"
   }
 }
