@@ -4,25 +4,15 @@ module.exports = class {
   }
 
   async initIndexes () {
-    try {
-      await this.dbClient.createIndex({
-        personnelName: 1 
-      }, {
-        unique: true
-      })
-    }
-    catch (error) {
-      console.error(error)
-    }
+    await this.dbClient.createIndex({
+      personnelName: 1 
+    }, {
+      unique: true
+    })
   }
 
   async getEmployees () {
-    try {
-      return await this.dbClient.find()
-        .toArray()
-    }
-    catch (error) {
-      console.error(error)
-    }
+    return await this.dbClient.find()
+      .toArray()
   }
 }
