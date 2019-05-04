@@ -4,20 +4,31 @@ module.exports = class {
     this.collectionName = collectionName
   }
 
-  async getEmployees () {
+  async createIndexes(indexes) {
     try {
-      const employees = await this.dbClient.collection('employees')
+      return await this.dbClient.collection(this.collectionName)
+        .createIndex(indexes, {
+          unique: true
+        })
+    }
+    catch (error) {
+      console.log(error)
+    }
+  }
+
+  async getDocs () {
+    try {
+      return await this.dbClient.collection(this.collectionName)
         .find()
         .toArray()
-      return employees
     }
     catch (error) {
       console.error(error)
     }
   }
-  async addEmployee (doc) {
+  async addDoc (doc) {
     try {
-      return (await this.dbClient.collection('employees')
+      return (await this.dbClient.collection(this.collectionName)
         .insertOne(doc)).insertedId
     }
     catch (error) {

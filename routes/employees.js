@@ -1,15 +1,20 @@
 const { Router } = require('express')
 
-const CrudDb = require('../services/crud-db')
+const { internalServerError } = require('../services/handle-errors')
 
-module.exports = db => Router()
+module.exports = model => Router()
   .get('/', async (_, res) => {
-    return res.status(200).json({
-      employees: await getEmployees(db)
-    })
+    try {
+      return res.status(200).json({
+        employees: await model.getEmployees()
+      })
+    }
+    catch (error) {
+      internalServerError(error, res)
+    }
   })
   .post('/', async (req, res) => {
-    const { name, surname, secondName, position } = req.body
+    const { name, surname, secondName, position, profilePic } = req.body
     return res.status(201).json({
       insertedId: await addEmployee(db, {
         name,

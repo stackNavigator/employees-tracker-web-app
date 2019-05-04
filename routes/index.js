@@ -2,5 +2,5 @@ const { Router } = require('express')
 
 const employees = require('./employees')
 
-module.exports = db => Router()
-  .use('/employees', employees(db))
+module.exports = ({ employee }) => Router()
+  .use('/employees', employees(employee))
