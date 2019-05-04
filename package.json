@@ -4,7 +4,7 @@
   "description": "Web app purposed for tracking employees.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest tests/employee --detectOpenHandles",
     "start": "nodemon server.js"
   },
   "author": "Oleksandr Zaychenko <zaychenko96y@outlook.com>",
@@ -16,6 +16,8 @@
     "mongodb": "^3.1.13"
   },
   "devDependencies": {
-    "dotenv": "^8.0.0"
+    "@types/jest": "^24.0.12",
+    "dotenv": "^8.0.0",
+    "jest": "^24.7.1"
   }
 }
