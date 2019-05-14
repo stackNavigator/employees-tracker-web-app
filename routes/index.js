@@ -1,6 +1,10 @@
 const { Router } = require('express')
 
-const employees = require('./employees')
+const { models } = require('../models')
 
-module.exports = ({ employee }) => Router()
-  .use('/employees', employees(employee))
+module.exports = () => {
+
+  return Router()
+    .get('/employees', models['employee'].getEmployees())
+    .get('/employee', models['employee'].getEmployee())
+}

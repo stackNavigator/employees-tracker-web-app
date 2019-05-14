@@ -1,15 +1,31 @@
-const { connectToDb } = require('../services/init-db')
-
-const Employee = require('../models/employee')
+const { connect, models } = require('../models')
+const { NotFoundError } = require('../services/handle-errors')
 
 describe('Test employees model functionality.', () => {
-  let employee = null
   beforeAll(async () => {
     require('dotenv').config()
-    employee = new Employee(await connectToDb(process.env.DB_URI))
+    await connect(process.env.DB_URI)
   })
 
   it('Should get all employees.', async () => {
-    await expect(employee.getEmployees()).resolves.toBeInstanceOf(Array)
+    await expect(models['employee']._getEmployees(1)).resolves.toBeTruthy()
+  })
+
+  it('Tries to get employee by name or surname. Should throw not found error.', async () => {
+    await expect(models['employee']._getEmployee({
+      $or: [
+        { name: 'Fake name' },
+        { surname: 'Fake surname' }
+      ]
+    })).rejects.toThrowError(NotFoundError)
+  })
+
+  it('Should get employee by name or surname.', async () => {
+    await expect(models['employee']._getEmployee({
+      $or: [
+        { name: 'Іван' },
+        { surname: 'Петренко' }
+      ]
+    })).resolves.toBeInstanceOf(Object)
   })
 })
