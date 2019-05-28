@@ -4,14 +4,13 @@ const bodyParser = require('body-parser')
 
 const initRoutes = require('./routes')
 const { connect, models } = require('./models')
-const { init } = require('./services/file-manager')
+const { handleErrors } = require('./services/handle-errors')
 
 ;(async () => {
   try {
     require('dotenv').config()
     const { PORT, DB_URI } = process.env
     await connect(DB_URI)
-    await init()
     await models['employee'].initIndexes()
 
     express()
@@ -20,6 +19,7 @@ const { init } = require('./services/file-manager')
       .use(bodyParser.json())
       .use(bodyParser.urlencoded({ extended: true }))
       .use(initRoutes())
+      .use(handleErrors())
       .use((_, res) => {
         return res.status(404).json({
           message: 'Resource was not found.'

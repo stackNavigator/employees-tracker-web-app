@@ -7,4 +7,5 @@ module.exports = () => {
   return Router()
     .get('/employees', models['employee'].getEmployees())
     .get('/employee', models['employee'].getEmployee())
+    .post('/employees', models['employee'].createEmployee())
 }

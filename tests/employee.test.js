@@ -7,8 +7,8 @@ describe('Test employees model functionality.', () => {
     await connect(process.env.DB_URI)
   })
 
-  it('Should get all employees.', async () => {
-    await expect(models['employee']._getEmployees(1)).resolves.toBeTruthy()
+  it('Should get employees based on page.', async () => {
+    await expect(models['employee']._getEmployees(1)).resolves.toHaveLength(1)
   })
 
   it('Tries to get employee by name or surname. Should throw not found error.', async () => {

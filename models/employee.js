@@ -1,4 +1,4 @@
-const { handleError, NotFoundError } = require('../services/handle-errors')
+const { NotFoundError } = require('../services/handle-errors')
 
 module.exports = class {
   constructor (dbClient) {
@@ -22,7 +22,7 @@ module.exports = class {
   }
 
   getEmployees () {
-    return async (req, res) => {
+    return async (req, res, next) => {
       try {
         const { query: { page } } = req
         return res.status(200).json({
@@ -30,7 +30,7 @@ module.exports = class {
         })
       }
       catch (error) {
-        handleError(error, res)
+        next(error)
       }
     }
   }
@@ -42,7 +42,7 @@ module.exports = class {
   }
 
   getEmployee() {
-    return async (req, res) => {
+    return async (req, res, next) => {
       try {
         const { query: { query } } = req
         return res.status(200).json({
@@ -55,7 +55,20 @@ module.exports = class {
         })
       }
       catch (error) {
-        handleError(error, res)
+        next(error)
+      }
+    }
+  }
+
+  createEmployee() {
+    return async (req, res, next) => {
+      try {
+        return res.status(201).json({
+          message: 'Image was uploaded.'
+        })
+      }
+      catch (error) {
+        next(error)
       }
     }
   }
