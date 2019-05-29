@@ -18,6 +18,7 @@ module.exports = class {
     return await this.dbClient.find()
       .skip((page - 1) * this.pageLimit)
       .limit(this.pageLimit)
+      .sort({ personnelName: 1 })
       .toArray()
   }
 
