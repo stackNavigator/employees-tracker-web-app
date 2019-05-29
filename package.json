@@ -19,6 +19,7 @@
   "devDependencies": {
     "@types/jest": "^24.0.12",
     "dotenv": "^8.0.0",
-    "jest": "^24.7.1"
+    "jest": "^24.7.1",
+    "multer": "^1.4.1"
   }
 }

@@ -41,7 +41,7 @@ module.exports = class {
     return doc
   }
 
-  getEmployee() {
+  getEmployee () {
     return async (req, res, next) => {
       try {
         const { query: { query } } = req
@@ -49,7 +49,7 @@ module.exports = class {
           employee: await this._getEmployee({
             $or: [
               { name: query },
-              { surname: query }
+              { personnelName: query }
             ]
           })
         })
@@ -60,12 +60,33 @@ module.exports = class {
     }
   }
 
-  createEmployee() {
+  async _createEmployee (payload, file) {
+    const { path } = file
+    const { insertedId } = await this.dbClient.insertOne({
+      profilePic: path,
+      ...payload
+    })
+    return insertedId
+  }
+
+  createEmployee () {
     return async (req, res, next) => {
       try {
         return res.status(201).json({
-          message: 'Image was uploaded.'
+          message: 'Employee was successfully created.',
+          id: await this._createEmployee(req.body, req.file)
         })
+      }
+      catch (error) {
+        next(error)
+      }
+    }
+  }
+
+  updateEmployee() {
+    return async (req, res, next) => {
+      try {
+
       }
       catch (error) {
         next(error)
