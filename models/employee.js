@@ -97,8 +97,8 @@ module.exports = class {
     else {
       profilePic = doc.profilePic
     }
-    await this.dbClient.updateOne({ 
-      _id: ObjectId(id) 
+    await this.dbClient.updateOne({
+      _id: ObjectId(id)
     }, {
       $set: {
         ...payload,

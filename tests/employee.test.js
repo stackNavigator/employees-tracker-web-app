@@ -3,6 +3,8 @@ const { ObjectId } = require('mongodb')
 const { connect, models } = require('../models')
 const { NotFoundError } = require('../services/handle-errors')
 
+let idToUpdate = null
+
 describe('Test employees model functionality.', () => {
   beforeAll(async () => {
     require('dotenv').config()
@@ -12,7 +14,7 @@ describe('Test employees model functionality.', () => {
   })
 
   it('Should create employee with given payload.', async () => {
-    await expect(models['employee']._createEmployee({
+    idToUpdate = await models['employee']._createEmployee({
        name: 'Семпл',
        surname: 'Семпленко',
        secondName: 'Семплович',
@@ -20,7 +22,8 @@ describe('Test employees model functionality.', () => {
        personnelName: '1'
     }, {
       path: 'profilePics/pic1.jpg'
-    })).resolves.toBeInstanceOf(ObjectId)
+    })
+    expect(idToUpdate).toBeInstanceOf(ObjectId)
   })
 
   it('Tries to duplicate unique index on employee creation. Should throw error.', async () => {
@@ -39,11 +42,11 @@ describe('Test employees model functionality.', () => {
     await expect(models['employee']._getEmployees(1)).resolves.toHaveLength(1)
   })
 
-  it('Tries to get employee by name or surname. Should throw not found error.', async () => {
+  it('Tries to get employee by name or personnel name. Should throw not found error.', async () => {
     await expect(models['employee']._getEmployee({
       $or: [
         { name: 'Fake name' },
-        { surname: 'Fake surname' }
+        { personnelName: 'Fake personnel' }
       ]
     })).rejects.toThrowError(NotFoundError)
   })
@@ -55,5 +58,11 @@ describe('Test employees model functionality.', () => {
         { personnelName: '1' }
       ]
     })).resolves.toBeInstanceOf(Object)
+  })
+
+  it ('Should update employee by payload and optionally by file.', async () => {
+    await expect(models['employee']._updateEmployee(idToUpdate, {
+      position: 'Змінена позиція'
+    }, null)).resolves.toBeInstanceOf(ObjectId)
   })
 })
