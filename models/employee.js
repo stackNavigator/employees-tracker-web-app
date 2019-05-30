@@ -1,3 +1,5 @@
+const { ObjectId } = require('mongodb')
+
 const { NotFoundError } = require('../services/handle-errors')
 
 module.exports = class {
@@ -84,10 +86,36 @@ module.exports = class {
     }
   }
 
-  updateEmployee() {
+  async _updateEmployee (id, payload, file) {
+    const doc = await this.dbClient.findOne({ _id: ObjectId(id) })
+    if (!doc) throw new NotFoundError('Employee was not found.')
+    let profilePic = null
+    if (file) {
+      profilePic = file.path
+      //delete old file
+    }
+    else {
+      profilePic = doc.profilePic
+    }
+    await this.dbClient.updateOne({ 
+      _id: ObjectId(id) 
+    }, {
+      $set: {
+        ...payload,
+        profilePic
+      }
+    })
+    return id
+  }
+
+  updateEmployee () {
     return async (req, res, next) => {
       try {
-
+        const { params: { id } } = req
+        return res.status(200).json({
+          message: 'Employee was successfully updated.',
+          id: await this._updateEmployee(id, req.body, req.file)
+        })
       }
       catch (error) {
         next(error)
