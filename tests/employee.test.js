@@ -65,4 +65,9 @@ describe('Test employees model functionality.', () => {
       position: 'Змінена позиція'
     }, null)).resolves.toBeInstanceOf(ObjectId)
   })
+
+  it('Should remove employee by id.', async () => {
+    await expect(models['employee']._removeEmployee(idToUpdate))
+      .resolves.toBe(true)
+  })
 })

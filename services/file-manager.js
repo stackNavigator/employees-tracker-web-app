@@ -1,7 +1,14 @@
 const multer = require('multer')
 const bcrypt = require('bcrypt')
 
-const storage = multer.diskStorage({
+const { validate } = require('./validator')
+const { ValidationError } = require('./handle-errors')
+const employeeSchemas = {
+  add: 'employees-tracker/employee-add',
+  patch: 'employees-tracker/employee-patch'
+}
+
+const employeeStorage = multer.diskStorage({
   destination: (_, __, cb) => {
     cb(null, './profilePics')
   },
@@ -11,23 +18,31 @@ const storage = multer.diskStorage({
     cb(null, `${bcrypt.hashSync(`${originalname}${Date.now()}`, 10).replace(/\//g, '')}.${ext}`)
   }
 })
-const limits = {
-  fileSize: 3 * 1024 * 1024
+const employeeLimits = {
+  fileSize: 1024 * 1024 * 5
 }
-const fileFilter = (_, file, cb) => {
+const employeeFileFilter = async (req, file, cb) => {
+  const { path, body, params: { id } } = req
+  let payload = null
+  if (path === '/employees')
+    payload = await validate(employeeSchemas.add, body)
+  if (path === `/employee/${id}`)
+    payload = await validate(employeeSchemas.patch, body)
+  if (Array.isArray(payload))
+    return cb(new ValidationError(payload))
   const { mimetype } = file
   if (mimetype === 'image/jpg' || mimetype === 'image/jpeg' || mimetype === 'image/png')
-    cb(null, true)
-  cb(null, false)
+    return cb(null, true)
+  return cb(new ValidationError('Incorrect image format. You should use only .jpg, .jpeg or .png'))
 }
-const imgUploader = multer({
-  storage,
-  limits,
-  fileFilter
+const employeeImgUploader = multer({
+  storage: employeeStorage,
+  limits: employeeLimits,
+  fileFilter: employeeFileFilter
 })
 
 module.exports = {
-  uploadOne (field) {
-    return imgUploader.single(field)
+  uploadEmployeeMedia (field) {
+    return employeeImgUploader.single(field)
   }
 }

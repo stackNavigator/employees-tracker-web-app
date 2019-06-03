@@ -1,6 +1,10 @@
 const { ObjectId } = require('mongodb')
 
-const { NotFoundError } = require('../services/handle-errors')
+const { NotFoundError, ValidationError } = require('../services/handle-errors')
+const { validate } = require('../services/validator')
+const employeeSchemas = {
+  patch: 'employees-tracker/employee-patch'
+}
 
 module.exports = class {
   constructor (dbClient) {
@@ -64,6 +68,7 @@ module.exports = class {
   }
 
   async _createEmployee (payload, file) {
+    if (!file) throw new ValidationError('File was not included.')
     const { path } = file
     const { insertedId } = await this.dbClient.insertOne({
       profilePic: path,
@@ -89,20 +94,20 @@ module.exports = class {
   async _updateEmployee (id, payload, file) {
     const doc = await this.dbClient.findOne({ _id: ObjectId(id) })
     if (!doc) throw new NotFoundError('Employee was not found.')
-    let profilePic = null
     if (file) {
-      profilePic = file.path
+      payload.profilePic = file.path
       //delete old file
     }
     else {
-      profilePic = doc.profilePic
+      const validatedPayload = await validate(employeeSchemas.patch, payload)
+      if (Array.isArray(validatedPayload)) 
+        throw new ValidationError(validatedPayload)
     }
     await this.dbClient.updateOne({
       _id: ObjectId(id)
     }, {
       $set: {
-        ...payload,
-        profilePic
+        ...payload
       }
     })
     return id
@@ -116,6 +121,27 @@ module.exports = class {
           message: 'Employee was successfully updated.',
           id: await this._updateEmployee(id, req.body, req.file)
         })
+      }
+      catch (error) {
+        next(error)
+      }
+    }
+  }
+
+  async _removeEmployee (id) {
+    const doc = await this.dbClient.findOne({ _id: ObjectId(id) })
+    if (!doc) throw new NotFoundError('Employee was not found.')
+    //delete old file
+    await this.dbClient.deleteOne({ _id: ObjectId(id) })
+    return true
+  }
+
+  removeEmployee () {
+    return async (req, res, next) => {
+      try {
+        const { params: { id } } = req
+        if (await this._removeEmployee(id))
+          return res.status(204).end()
       }
       catch (error) {
         next(error)
