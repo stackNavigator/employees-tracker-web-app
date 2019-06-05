@@ -3,7 +3,7 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 
 const initRoutes = require('./routes')
-const { connect, models } = require('./models')
+const { connect } = require('./models')
 const { handleErrors } = require('./services/handle-errors')
 
 ;(async () => {
@@ -11,7 +11,6 @@ const { handleErrors } = require('./services/handle-errors')
     require('dotenv').config()
     const { PORT, DB_URI } = process.env
     await connect(DB_URI)
-    await models['employee'].initIndexes()
 
     express()
       .use(cors())

@@ -12,19 +12,10 @@ module.exports = class {
     this.pageLimit = 20
   }
 
-  async initIndexes () {
-    await this.dbClient.createIndex({
-      personnelName: 1 
-    }, {
-      unique: true
-    })
-  }
-
   async _getEmployees (page) {
     return await this.dbClient.find()
       .skip((page - 1) * this.pageLimit)
       .limit(this.pageLimit)
-      .sort({ personnelName: 1 })
       .toArray()
   }
 
@@ -43,9 +34,9 @@ module.exports = class {
   }
 
   async _getEmployee (query) {
-    const doc = await this.dbClient.findOne(query)
-    if (!doc) throw new NotFoundError('Employee was not found.')
-    return doc
+    const docs = await this.dbClient.find(query).toArray()
+    if (!docs.length) throw new NotFoundError('Employee was not found.')
+    return docs
   }
 
   getEmployee () {
@@ -55,7 +46,7 @@ module.exports = class {
         return res.status(200).json({
           employee: await this._getEmployee({
             $or: [
-              { name: query },
+              { surname: query },
               { personnelName: query }
             ]
           })

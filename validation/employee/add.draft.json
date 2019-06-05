@@ -3,7 +3,7 @@
   "$id": "employees-tracker/employee-add",
   "type": "object",
   "additionalProperties": false,
-  "required": ["name", "surname", "secondName", "position", "personnelName"],
+  "required": ["name", "surname", "secondName", "position", "personnelName" ],
   "properties": {
     "name": {
       "type": "string",

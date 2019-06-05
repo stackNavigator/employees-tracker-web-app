@@ -9,7 +9,6 @@ describe('Test employees model functionality.', () => {
   beforeAll(async () => {
     require('dotenv').config()
     await connect(process.env.DB_URI)
-    await models['employee'].initIndexes()
     await models['employee'].dbClient.deleteMany()
   })
 
@@ -26,35 +25,32 @@ describe('Test employees model functionality.', () => {
     expect(idToUpdate).toBeInstanceOf(ObjectId)
   })
 
-  it('Tries to duplicate unique index on employee creation. Should throw error.', async () => {
-    await expect(models['employee']._createEmployee({
-      name: 'Рофл',
-      surname: 'Рофланенко',
-      secondName: 'Рофланович',
-      position: 'Оператор мемів',
-      personnelName: '1'
-    }, {
-      path: 'profilePics/pic2.jpg'
-    })).rejects.toThrowError()
-  })
-
   it('Should get employees based on page.', async () => {
     await expect(models['employee']._getEmployees(1)).resolves.toHaveLength(1)
   })
 
-  it('Tries to get employee by name or personnel name. Should throw not found error.', async () => {
+  it('Tries to get employee by surname or personnel name. Should throw not found error.', async () => {
     await expect(models['employee']._getEmployee({
       $or: [
-        { name: 'Fake name' },
+        { surname: 'Fake name' },
         { personnelName: 'Fake personnel' }
       ]
     })).rejects.toThrowError(NotFoundError)
   })
 
-  it('Should get employee by name or surname.', async () => {
+  it('Should get employee by surname or personnel name.', async () => {
+    await models['employee']._createEmployee({
+      name: 'Рофл',
+      surname: 'Семпленко',
+      secondName: 'Рофлович',
+      position: 'Оператор рофл',
+      personnelName: '1'
+    }, {
+      path: 'profilePics/pic2.jpg'
+    })
     await expect(models['employee']._getEmployee({
       $or: [
-        { name: 'Семпл' },
+        { surname: 'Семпленко' },
         { personnelName: '1' }
       ]
     })).resolves.toBeInstanceOf(Object)
