@@ -1,6 +1,7 @@
 const { MongoClient } = require('mongodb')
 
 const Employee = require('./employee')
+const User = require('./user')
 
 const models = {}
 
@@ -12,6 +13,7 @@ module.exports = {
       })).db()
 
       models['employee'] = new Employee(dbClient)
+      models['user'] = new User(dbClient)
     }
     catch (error) {
       console.error(error)

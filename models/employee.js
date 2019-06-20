@@ -9,42 +9,20 @@ const employeeSchemas = {
 module.exports = class {
   constructor (dbClient) {
     this.dbClient = dbClient.collection('employees')
-    this.pageLimit = 20
   }
 
-  async _getEmployees (page) {
-    return await this.dbClient.find()
-      .skip((page - 1) * this.pageLimit)
-      .limit(this.pageLimit)
-      .toArray()
-  }
-
-  getEmployees () {
-    return async (req, res, next) => {
-      try {
-        const { query: { page } } = req
-        return res.status(200).json({
-          employees: await this._getEmployees(page)
-        })
-      }
-      catch (error) {
-        next(error)
-      }
-    }
-  }
-
-  async _getEmployee (query) {
+  async _getEmployees (query) {
     const docs = await this.dbClient.find(query).toArray()
     if (!docs.length) throw new NotFoundError('Employee was not found.')
     return docs
   }
 
-  getEmployee () {
+  getEmployees () {
     return async (req, res, next) => {
       try {
         const { query: { query } } = req
         return res.status(200).json({
-          employee: await this._getEmployee({
+          employee: await this._getEmployees({
             $or: [
               { surname: query },
               { personnelName: query }
@@ -91,7 +69,7 @@ module.exports = class {
     }
     else {
       const validatedPayload = await validate(employeeSchemas.patch, payload)
-      if (Array.isArray(validatedPayload)) 
+      if (Array.isArray(validatedPayload))
         throw new ValidationError(validatedPayload)
     }
     await this.dbClient.updateOne({

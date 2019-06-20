@@ -14,23 +14,19 @@ describe('Test employees model functionality.', () => {
 
   it('Should create employee with given payload.', async () => {
     idToUpdate = await models['employee']._createEmployee({
-       name: 'Семпл',
-       surname: 'Семпленко',
-       secondName: 'Семплович',
-       position: 'Оператор семплів',
-       personnelName: '1'
-    }, {
+      name: 'Семпл',
+      surname: 'Семпленко',
+      secondName: 'Семплович',
+      position: 'Оператор семплів',
+      personnelName: '1'
+  }, {
       path: 'profilePics/pic1.jpg'
     })
     expect(idToUpdate).toBeInstanceOf(ObjectId)
   })
 
-  it('Should get employees based on page.', async () => {
-    await expect(models['employee']._getEmployees(1)).resolves.toHaveLength(1)
-  })
-
   it('Tries to get employee by surname or personnel name. Should throw not found error.', async () => {
-    await expect(models['employee']._getEmployee({
+    await expect(models['employee']._getEmployees({
       $or: [
         { surname: 'Fake name' },
         { personnelName: 'Fake personnel' }
@@ -48,7 +44,7 @@ describe('Test employees model functionality.', () => {
     }, {
       path: 'profilePics/pic2.jpg'
     })
-    await expect(models['employee']._getEmployee({
+    await expect(models['employee']._getEmployees({
       $or: [
         { surname: 'Семпленко' },
         { personnelName: '1' }
@@ -56,7 +52,7 @@ describe('Test employees model functionality.', () => {
     })).resolves.toBeInstanceOf(Object)
   })
 
-  it ('Should update employee by payload and optionally by file.', async () => {
+  it ('Should update employee with given payload and optionally with file.', async () => {
     await expect(models['employee']._updateEmployee(idToUpdate, {
       position: 'Змінена позиція'
     }, null)).resolves.toBeInstanceOf(ObjectId)

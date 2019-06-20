@@ -2,7 +2,7 @@ const multer = require('multer')
 const bcrypt = require('bcrypt')
 
 const { validate } = require('./validator')
-const { ValidationError } = require('./handle-errors')
+const { ValidationError, UnsupportedMedia } = require('./handle-errors')
 const employeeSchemas = {
   add: 'employees-tracker/employee-add',
   patch: 'employees-tracker/employee-patch'
@@ -33,7 +33,7 @@ const employeeFileFilter = async (req, file, cb) => {
   const { mimetype } = file
   if (mimetype === 'image/jpg' || mimetype === 'image/jpeg' || mimetype === 'image/png')
     return cb(null, true)
-  return cb(new ValidationError('Incorrect image format. You should use only .jpg, .jpeg or .png'))
+  return cb(new UnsupportedMedia('Incorrect image format. You should use only .jpg, .jpeg or .png'))
 }
 const employeeImgUploader = multer({
   storage: employeeStorage,
