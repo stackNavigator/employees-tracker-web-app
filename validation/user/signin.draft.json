@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "employees-tracker/user-signin",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [ "username", "password" ],
+  "properties": {
+    "username": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 20,
+      "pattern": "^[a-zA-Z0-9]+_?[a-zA-Z0-9]+$"
+    },
+    "password": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 64,
+      "pattern": "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*"
+    }
+  }
+}

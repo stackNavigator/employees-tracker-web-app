@@ -42,7 +42,7 @@ const employeeImgUploader = multer({
 })
 
 module.exports = {
-  uploadEmployeeMedia (field) {
+  uploadEmployeeImage (field) {
     return employeeImgUploader.single(field)
   }
 }

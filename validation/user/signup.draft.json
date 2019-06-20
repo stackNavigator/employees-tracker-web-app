@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "employees-tracker/user-signup",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [ "username", "password", "role" ],
+  "properties": {
+    "username": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9]+_?[a-zA-Z0-9]+$"
+    },
+    "password": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 64,
+      "pattern": "(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*"
+    },
+    "role": {
+      "type": "string",
+      "pattern": "^admin|hr|guard$"
+    }
+  }
+}

@@ -1,7 +1,8 @@
 const ajv = require('ajv')()
 
 ajv.addSchema([
-  ...require('../validation/employee')
+  ...require('../validation/employee'),
+  ...require('../validation/user')
 ])
 
 module.exports = {
