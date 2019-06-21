@@ -57,7 +57,7 @@ module.exports = class {
     if (!bcrypt.compareSync(password, existingUser.password)) throw new AuthorizationError()
     const { _id, role } = existingUser
     return {
-      token: await jwt.sign({ _id }, process.env.JWT_SECRET_KEY, { expiresIn: 30 }),
+      token: await jwt.sign({ _id }, process.env.JWT_SECRET_KEY, { expiresIn: 60 }),
       role
     }
   }
@@ -77,5 +77,32 @@ module.exports = class {
         next(error)
       }
     }
+  }
+
+  async _removeUser (id) {
+    const doc = await this.dbClient.findOne({ _id: ObjectId(id) })
+    if (!doc) throw new NotFoundError('User was not found.')
+    await this.dbClient.deleteOne({ _id: ObjectId(id) })
+    return true
+  }
+
+  removeUser () {
+    return async (req, res, next) => {
+      try {
+        const { params: { id } } = req
+        if (await this._removeUser(id))
+          return res.status(204).end()
+      }
+      catch (error) {
+        next(error)
+      }
+    }
+  }
+
+  async getUserRole (id) {
+    const user = await this.dbClient.findOne({ _id: ObjectId(id) })
+    if (!user) throw new NotFoundError('User was not found.')
+    const { role } = user
+    return role
   }
 }

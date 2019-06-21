@@ -56,6 +56,10 @@ module.exports = {
         return res.status(401).json({
           message: err.message
         })
+      if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError')
+        return res.status(401).json({
+          message: err.message
+        })
       const { stack } = err
       return res.status(500).json({
         message: stack
