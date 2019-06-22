@@ -1,6 +1,6 @@
-# Employees Tracker Server
+# Employees Tracker Web App
 
-> Server application for listening requests from employees tracker clients.
+> Web application for monitoring employees.
 
 ## Setup
 
