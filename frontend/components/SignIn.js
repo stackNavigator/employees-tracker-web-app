@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
 
 export class SignIn extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
-      text: 'Вхід до системи',
       inputs: [
         {
           name: 'username',
@@ -24,7 +23,10 @@ export class SignIn extends Component {
           patternMsg: 'Необхідна щонайменше одна велика літера і цифра (англійські літери).',
           placeholder: 'Введіть пароль'
         }
-      ]
+      ],
+      isLoading: false,
+      isError: false,
+      errorMessage: ''
     }
   }
 
@@ -62,9 +64,38 @@ export class SignIn extends Component {
 
   handleSubmit = () => {
     const validated = this.state.inputs.map(input => this.validateInput(input))
-    if (!validated.includes(false))
-      console.log('submitted')
-    
+    if (validated.includes(false))
+      return
+    this.setState({ isLoading: true, isError: false })
+    const payload = this.state.inputs.reduce((acc, { name, value }) => ({ ...acc, [name]: value}), {})
+    console.log(JSON.stringify(payload))
+    fetch(`http://localhost:3502/api/signin`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(res => {
+      if (res.status === 404)
+        throw 'Такого користувача не існує, спробуйте інший логін.'
+      if (res.status === 401)
+        throw 'Помилка входу, спробуйте інший логін та/або пароль.'
+      if (res.status === 200)
+        return res.json()
+    })
+    .then(({ role }) => {
+      console.log(role)
+      this.setState({ isLoading: false })
+    })
+    .catch(err => {
+      this.setState({
+        isError: true,
+        errorMessage: err,
+        isLoading: false
+      })
+    })
   }
 
   render() {
@@ -72,8 +103,8 @@ export class SignIn extends Component {
       const { name, value, min, max, pattern, placeholder } = input
       return (
         <div className="col s12" key={name}>
-          <div className="col s12 input-field" key={name}>
-            <input key={name} name={name} onChange={this.handleInputChange}
+          <div className="col s12 input-field">
+            <input name={name} onChange={this.handleInputChange}
             value={value} onInput={() => this.validateInput(input)}
             type="text" placeholder={placeholder} minLength={min}
             maxLength={max} pattern={pattern} required />
@@ -84,15 +115,27 @@ export class SignIn extends Component {
 
     return (
       <div>
-        <h3 className="center-align">{this.state.text}</h3>
+        <h3 className="center-align">{this.props.text}</h3>
         <form className="row" onSubmit={e => e.preventDefault()}>
           {inputs}
-          <div className="col s12 center-align">
-          <button className="btn-flat" onClick={this.handleSubmit}>
-            Увійти до системи
-            <i className="material-icons right">assignment</i>
-          </button>
-        </div>
+          { this.state.isError
+            ?
+            <div className="col s12 center-align errMessage">
+              <h5>{this.state.errorMessage}</h5>
+            </div>
+            : '' }
+          { this.state.isLoading 
+            ?
+            <div className="col s12 center-align">
+              {React.Children.toArray(this.props.children)[0]}
+            </div>
+            : 
+            <div className="col s12 center-align">
+              <button className="btn-flat" onClick={this.handleSubmit}>
+                Увійти до системи
+                <i className="material-icons right">person</i>
+              </button>
+            </div> }
         </form>
       </div>
     )

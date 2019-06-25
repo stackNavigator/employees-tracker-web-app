@@ -1,16 +1,20 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import 'materialize-css/dist/css/materialize.min.css'
+import './css/style.css'
 
 import { Switcher } from './components/Switcher'
 import { SignIn } from './components/SignIn'
 import { Employees } from './components/Employees'
 import { Admin } from './components/Admin'
+import { Loader } from './components/Loader'
 
 
 ReactDOM.render(
   <Switcher>
-    <SignIn />
+    <SignIn text='Вхід до системи'>
+      <Loader color="blue"/>
+    </SignIn>
     <Employees />
     <Admin />
   </Switcher>,
