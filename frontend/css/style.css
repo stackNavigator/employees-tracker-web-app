@@ -15,3 +15,13 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
   background-color: #3399ff;
   color: #ffffff;
 }
+
+.slide-out {
+  animation: slide-out 0.5s linear;
+  -webkit-animation: slide-out 0.5s linear 0.001s;
+}
+
+@keyframes slide-out {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-100%); }
+}

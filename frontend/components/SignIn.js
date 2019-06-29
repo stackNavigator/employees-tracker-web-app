@@ -10,6 +10,7 @@ export class SignIn extends Component {
           value: '',
           min: 2,
           max: 20,
+          type: 'text',
           pattern: '^[a-zA-Z0-9]+_?[a-zA-Z0-9]+$',
           patternMsg: 'Дозволяються лише англійські літери, цифри та символ "_".',
           placeholder: 'Введіть логін'
@@ -19,14 +20,17 @@ export class SignIn extends Component {
           value: '',
           min: 8,
           max: 64,
+          type: 'password',
           pattern: '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).*',
           patternMsg: 'Необхідна щонайменше одна велика літера і цифра (англійські літери).',
           placeholder: 'Введіть пароль'
         }
       ],
       isLoading: false,
+      isAnimating: false,
       isError: false,
-      errorMessage: ''
+      errorMessage: '',
+      role: ''
     }
   }
 
@@ -62,13 +66,17 @@ export class SignIn extends Component {
     }
   }
 
+  handleAnimation = () => {
+    this.setState({ isAnimating: false, isLoading: false })
+    this.props.onSubmit(this.state.role)
+  }
+
   handleSubmit = () => {
     const validated = this.state.inputs.map(input => this.validateInput(input))
     if (validated.includes(false))
       return
     this.setState({ isLoading: true, isError: false })
     const payload = this.state.inputs.reduce((acc, { name, value }) => ({ ...acc, [name]: value}), {})
-    console.log(JSON.stringify(payload))
     fetch(`http://localhost:3502/api/signin`,
     {
       method: 'POST',
@@ -86,8 +94,7 @@ export class SignIn extends Component {
         return res.json()
     })
     .then(({ role }) => {
-      console.log(role)
-      this.setState({ isLoading: false })
+      this.setState({ role, isAnimating: true })
     })
     .catch(err => {
       this.setState({
@@ -100,13 +107,13 @@ export class SignIn extends Component {
 
   render() {
     const inputs = this.state.inputs.map(input => {
-      const { name, value, min, max, pattern, placeholder } = input
+      const { name, value, min, max, type, pattern, placeholder } = input
       return (
         <div className="col s12" key={name}>
           <div className="col s12 input-field">
             <input name={name} onChange={this.handleInputChange}
             value={value} onInput={() => this.validateInput(input)}
-            type="text" placeholder={placeholder} minLength={min}
+            type={type} placeholder={placeholder} minLength={min}
             maxLength={max} pattern={pattern} required />
           </div>
         </div>
@@ -114,7 +121,8 @@ export class SignIn extends Component {
     })
 
     return (
-      <div>
+      <div className={this.state.isAnimating ? 'slide-out' : ''} 
+      onAnimationEnd={this.handleAnimation}>
         <h3 className="center-align">{this.props.text}</h3>
         <form className="row" onSubmit={e => e.preventDefault()}>
           {inputs}

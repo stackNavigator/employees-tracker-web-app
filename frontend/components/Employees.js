@@ -10,7 +10,9 @@ export class Employees extends Component {
 
   render() {
     return (
-      <h1>{this.state.text}</h1>
+      <div className="row">
+        {this.props.children[1]}
+      </div>
     )
   }
 }
