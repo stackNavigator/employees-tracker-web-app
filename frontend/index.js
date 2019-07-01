@@ -13,6 +13,7 @@ import { SearchField } from './components/SearchField'
 
 ReactDOM.render(
   <Switcher>
+    <Loader color="blue"/>
     <SignIn text='Вхід до системи'>
       <Loader color="blue"/>
     </SignIn>

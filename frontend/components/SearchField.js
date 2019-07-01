@@ -5,9 +5,6 @@ export class SearchField extends Component {
     super()
     this.state = {
       searchField: '',
-      isError: false,
-      errorMessage: '',
-      isPresent: false,
       searchTimeout: ''
     }
   }
@@ -32,9 +29,10 @@ export class SearchField extends Component {
   handleDelayedSearch = ({ target: { name } }) => {
     if (this.state.searchTimeout)
       clearTimeout(this.state.searchTimeout)
-    if (this.validateInput(name))
+    if (this.validateInput(name) && !this.props.isLocked)
       this.setState({
         searchTimeout: setTimeout(() => {
+          this.props.onLoading(this.state.searchField)
           console.log(this.state.searchField)
         }, 1000)
       })
@@ -50,16 +48,6 @@ export class SearchField extends Component {
           placeholder="Введіть табельний номер або прізвище" minLength="1"
           maxLength="64" required />
         </div>
-        {this.state.isError 
-        ? 
-        <div className="col s12 center-align errMessage">
-          <h5>{this.state.errorMessage}</h5>
-        </div>
-        : ''}
-        {this.state.isPresent
-        ?
-        <div></div>
-        : ''}
       </div>
     )
   }

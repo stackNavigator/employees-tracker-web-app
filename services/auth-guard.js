@@ -26,5 +26,19 @@ module.exports = {
         next(error)
       }
     }
+  },
+  checkAccess() {
+    return async (req, res, next) => {
+      try {
+        const token = req.headers.authorization.split(' ')[1]
+        const { _id } = await jwt.verify(token, process.env.JWT_SECRET_KEY)
+        return res.status(200).json({
+          role: await models['user'].getUserRole(_id)
+        })
+      }
+      catch (error) {
+        next(error)
+      }
+    }
   }
 }

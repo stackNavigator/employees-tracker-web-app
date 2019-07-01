@@ -93,7 +93,8 @@ export class SignIn extends Component {
       if (res.status === 200)
         return res.json()
     })
-    .then(({ role }) => {
+    .then(({ role, token }) => {
+      localStorage.setItem('token', token)
       this.setState({ role, isAnimating: true })
     })
     .catch(err => {

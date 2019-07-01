@@ -2,11 +2,12 @@ const { Router } = require('express')
 
 const { models } = require('../models')
 const { uploadEmployeeImage } = require('../services/file-manager')
-const { checkAuth } = require('../services/auth-guard')
+const { checkAuth, checkAccess } = require('../services/auth-guard')
 
 module.exports = () => {
   return Router()
     .post('/signin', models['user'].signIn())
+    .get('/check-access', checkAccess())
     .use(checkAuth())
     .get('/employees', models['employee'].getEmployees())
     .post('/employees', uploadEmployeeImage('profilePic'), models['employee'].createEmployee())
