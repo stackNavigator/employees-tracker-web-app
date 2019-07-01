@@ -127,24 +127,24 @@ export class SignIn extends Component {
         <h3 className="center-align">{this.props.text}</h3>
         <form className="row" onSubmit={e => e.preventDefault()}>
           {inputs}
-          { this.state.isError
-            ?
-            <div className="col s12 center-align errMessage">
-              <h5>{this.state.errorMessage}</h5>
-            </div>
-            : '' }
-          { this.state.isLoading 
-            ?
-            <div className="col s12 center-align">
-              {React.Children.toArray(this.props.children)[0]}
-            </div>
-            : 
-            <div className="col s12 center-align">
-              <button className="btn-flat" onClick={this.handleSubmit}>
-                Увійти до системи
-                <i className="material-icons right">person</i>
-              </button>
-            </div> }
+          {this.state.isError
+          ?
+          <div className="col s12 center-align errMessage">
+            <h5>{this.state.errorMessage}</h5>
+          </div>
+          : '' }
+          {this.state.isLoading 
+          ?
+          <div className="col s12 center-align">
+            {React.Children.toArray(this.props.children)[0]}
+          </div>
+          : 
+          <div className="col s12 center-align">
+            <button className="btn-flat" onClick={this.handleSubmit}>
+              Увійти до системи
+              <i className="material-icons right">person</i>
+            </button>
+          </div> }
         </form>
       </div>
     )

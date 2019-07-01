@@ -6,8 +6,14 @@ export class Employees extends Component {
     this.state = {
       errorMessage: '',
       employee: null,
-      isLoading: false
+      isLoading: false,
+      isAnimating: false
     }
+  }
+
+  handleAnimation = () => {
+    this.setState({ isAnimating: false, isLoading: false })
+    this.props.onSubmit(null)
   }
 
   handleLoading = field => {
@@ -31,19 +37,19 @@ export class Employees extends Component {
       this.setState({ employee: employee[0], isLoading: false })
     })
     .catch(err => {
-      this.setState({
-        errorMessage: err,
-        isLoading: false
-      })
+      err === 'Користувач не авторизований.'
+      ? this.setState({ isAnimating: true })
+      : this.setState({ errorMessage: err, isLoading: false })
     })
   }
 
   render() {
     const children = this.props.children.map((child, i) => i === 1
-      ? React.cloneElement(child, { onLoading: this.handleLoading, isLocked: this.state.isLoading })
+      ? React.cloneElement(child, { onLoading: this.handleLoading })
       : React.cloneElement(child))
     return (
-      <div className="row">
+      <div className={this.state.isAnimating ? 'row slide-out' : 'row'} 
+      onAnimationEnd={this.handleAnimation}>
         {children[1]}
         {this.state.errorMessage
         ? 

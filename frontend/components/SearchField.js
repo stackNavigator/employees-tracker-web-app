@@ -29,11 +29,10 @@ export class SearchField extends Component {
   handleDelayedSearch = ({ target: { name } }) => {
     if (this.state.searchTimeout)
       clearTimeout(this.state.searchTimeout)
-    if (this.validateInput(name) && !this.props.isLocked)
+    if (this.validateInput(name))
       this.setState({
         searchTimeout: setTimeout(() => {
           this.props.onLoading(this.state.searchField)
-          console.log(this.state.searchField)
         }, 1000)
       })
   }

@@ -39,9 +39,9 @@ export class Switcher extends Component {
   }
 
   render() {
-    const children = this.props.children.map((child, i) => i === 1
-      ? React.cloneElement(child, { onSubmit: this.switchRole }) 
-      : React.cloneElement(child))
+    const children = this.props.children.map((child, i) => i === 0
+      ? React.cloneElement(child)
+      : React.cloneElement(child, { onSubmit: this.switchRole }))
     let child
     if (this.state.isLoading)
       child = <div className="col s12 center-align">{children[0]}</div>
