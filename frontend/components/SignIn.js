@@ -141,7 +141,7 @@ export class SignIn extends Component {
           {inputs}
           {this.state.isError
           ?
-          <div className="col s12 center-align errMessage">
+          <div className="col s12 center-align err-message">
             <h5>{this.state.errorMessage}</h5>
           </div>
           : '' }

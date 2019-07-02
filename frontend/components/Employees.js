@@ -48,12 +48,12 @@ export class Employees extends Component {
       ? React.cloneElement(child, { onLoading: this.handleLoading })
       : React.cloneElement(child))
     return (
-      <div className={this.state.isAnimating ? 'row slide-out' : 'row'} 
+      <div className={this.state.isAnimating ? 'row slide-out' : 'row'}
       onAnimationEnd={this.handleAnimation}>
         {children[1]}
         {this.state.errorMessage
         ? 
-        <div className="col s12 center-align errMessage">
+        <div className="col s12 center-align err-message">
           <h5>{this.state.errorMessage}</h5>
         </div>
         : ''}
@@ -65,7 +65,9 @@ export class Employees extends Component {
         : ''}
         {this.state.employee
         ?
-        <div>{this.state.employee._id}</div>
+        <div className="col s12">
+          {React.cloneElement(children[2], { ...this.state.employee })}
+        </div>
         : ''}
       </div>
     )

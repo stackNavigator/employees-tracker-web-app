@@ -9,7 +9,7 @@ import { Employees } from './components/Employees'
 import { Admin } from './components/Admin'
 import { Loader } from './components/Loader'
 import { SearchField } from './components/SearchField'
-
+import { InfoCard } from './components/InfoCard'
 
 ReactDOM.render(
   <Switcher>
@@ -20,6 +20,7 @@ ReactDOM.render(
     <Employees>
       <Loader color="blue"/>
       <SearchField />
+      <InfoCard />
     </Employees>
     <Admin />
   </Switcher>,
