@@ -66,6 +66,14 @@ export class SignIn extends Component {
     }
   }
 
+  toggleVisibility = () => {
+    const input = document.querySelector('[name=password]')
+    const { type } = input
+    type === 'password'
+    ? input.setAttribute('type', 'text')
+    : input.setAttribute('type', 'password')
+  }
+
   handleAnimation = () => {
     this.setState({ isAnimating: false, isLoading: false })
     this.props.onSubmit(this.state.role)
@@ -116,6 +124,10 @@ export class SignIn extends Component {
             value={value} onInput={() => this.validateInput(input)}
             type={type} placeholder={placeholder} minLength={min}
             maxLength={max} pattern={pattern} required />
+            {input.name === 'password'
+            ? <i onClick={this.toggleVisibility}
+              className="material-icons toggle-visibility">remove_red_eye</i>
+            : ''}
           </div>
         </div>
       )

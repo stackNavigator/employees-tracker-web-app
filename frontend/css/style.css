@@ -8,6 +8,21 @@ input[type=password]:not(.browser-default):focus:not([readonly]) {
   font-size: 1.5rem;
 }
 
+.input-field .toggle-visibility {
+  position: absolute;
+  top: 18px;
+  right: 10px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.input-field .toggle-visibility:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
 .errMessage {
   color: #ed2c09;
 }
