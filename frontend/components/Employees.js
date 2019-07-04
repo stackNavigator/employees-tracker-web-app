@@ -7,13 +7,21 @@ export class Employees extends Component {
       errorMessage: '',
       employee: null,
       isLoading: false,
-      isAnimating: false
+      isAnimating: false,
+      notAuthorized: false,
+      isAdding: false
     }
   }
 
   handleAnimation = () => {
     this.setState({ isAnimating: false, isLoading: false })
-    this.props.onSubmit(null)
+    if (this.state.notAuthorized)
+      this.props.onSubmit(null)
+    this.setState({ isAdding: true })
+  }
+
+  handleAddClick = () => {
+    this.handleAnimation()
   }
 
   handleLoading = field => {
@@ -63,12 +71,17 @@ export class Employees extends Component {
           {children[0]}
         </div>
         : ''}
-        {this.state.employee
-        ?
         <div className="col s12">
-          {React.cloneElement(children[2], { ...this.state.employee })}
+          <div className="custom-row">
+            <div className="custom-col center-align"></div>
+            {this.state.employee
+            ? React.cloneElement(children[2], { ...this.state.employee, role: this.props.role })
+            : ''}
+            {this.props.role === 'hr'
+            ? React.cloneElement(children[3], { onAddClick: this.handleAddClick })
+            : ''}
+          </div>
         </div>
-        : ''}
       </div>
     )
   }

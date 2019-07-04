@@ -39,18 +39,16 @@ export class Switcher extends Component {
   }
 
   render() {
-    const children = this.props.children.map((child, i) => i === 0
-      ? React.cloneElement(child)
-      : React.cloneElement(child, { onSubmit: this.switchRole }))
     let child
     if (this.state.isLoading)
-      child = <div className="col s12 center-align">{children[0]}</div>
+      child = <div className="col s12 center-align">{React.cloneElement(this.props.children[0])}</div>
     else if (this.state.role === null)
-      child = children[1]
+      child = React.cloneElement(this.props.children[1], { onSubmit: this.switchRole })
     else if (this.state.role === 'guard' || this.state.role === 'hr')
-      child = children[2]
+      child = React.cloneElement(this.props.children[2], 
+        { role: this.state.role, onSubmit: this.switchRole })
     else if (this.state.role === 'admin')
-      child = children[3]
+      child = React.cloneElement(this.props.children[3])
     return (
       <div>{child}</div>
     )

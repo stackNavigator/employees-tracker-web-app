@@ -10,6 +10,7 @@ import { Admin } from './components/Admin'
 import { Loader } from './components/Loader'
 import { SearchField } from './components/SearchField'
 import { InfoCard } from './components/InfoCard'
+import { AddButton } from './components/AddButton'
 
 ReactDOM.render(
   <Switcher>
@@ -21,6 +22,7 @@ ReactDOM.render(
       <Loader color="blue"/>
       <SearchField />
       <InfoCard />
+      <AddButton />
     </Employees>
     <Admin />
   </Switcher>,
