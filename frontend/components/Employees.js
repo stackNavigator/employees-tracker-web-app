@@ -17,11 +17,13 @@ export class Employees extends Component {
     this.setState({ isAnimating: false, isLoading: false })
     if (this.state.notAuthorized)
       this.props.onSubmit(null)
-    this.setState({ isAdding: true })
+    if (this.state.isAdding) {
+      this.props.onCrudClick('add')
+    }
   }
 
   handleAddClick = () => {
-    this.handleAnimation()
+    this.setState({ isAnimating: true, isAdding: true })
   }
 
   handleLoading = field => {
@@ -46,19 +48,16 @@ export class Employees extends Component {
     })
     .catch(err => {
       err === 'Користувач не авторизований.'
-      ? this.setState({ isAnimating: true })
+      ? this.setState({ isAnimating: true, notAuthorized: true })
       : this.setState({ errorMessage: err, isLoading: false })
     })
   }
 
   render() {
-    const children = this.props.children.map((child, i) => i === 1
-      ? React.cloneElement(child, { onLoading: this.handleLoading })
-      : React.cloneElement(child))
     return (
       <div className={this.state.isAnimating ? 'row slide-out' : 'row'}
       onAnimationEnd={this.handleAnimation}>
-        {children[1]}
+        {React.cloneElement(this.props.children[1], { onLoading: this.handleLoading })}
         {this.state.errorMessage
         ? 
         <div className="col s12 center-align err-message">
@@ -68,17 +67,18 @@ export class Employees extends Component {
         {this.state.isLoading
         ?
         <div className="col s12 center-align">
-          {children[0]}
+          {React.cloneElement(this.props.children[0])}
         </div>
         : ''}
         <div className="col s12">
           <div className="custom-row">
             <div className="custom-col center-align"></div>
             {this.state.employee
-            ? React.cloneElement(children[2], { ...this.state.employee, role: this.props.role })
+            ? React.cloneElement(this.props.children[2], 
+                { ...this.state.employee, role: this.props.role })
             : ''}
             {this.props.role === 'hr'
-            ? React.cloneElement(children[3], { onAddClick: this.handleAddClick })
+            ? React.cloneElement(this.props.children[3], { onCrudClick: this.handleAddClick })
             : ''}
           </div>
         </div>

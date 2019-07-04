@@ -6,7 +6,7 @@ export class AddButton extends Component {
   }
 
   handleClick = () => {
-    this.props.onAddClick()
+    this.props.onCrudClick('add')
   }
 
   render() {

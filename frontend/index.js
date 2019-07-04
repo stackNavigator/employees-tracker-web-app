@@ -11,6 +11,7 @@ import { Loader } from './components/Loader'
 import { SearchField } from './components/SearchField'
 import { InfoCard } from './components/InfoCard'
 import { AddButton } from './components/AddButton'
+import { AddEmployee } from './components/AddEmployee'
 
 ReactDOM.render(
   <Switcher>
@@ -24,6 +25,7 @@ ReactDOM.render(
       <InfoCard />
       <AddButton />
     </Employees>
+    <AddEmployee />
     <Admin />
   </Switcher>,
   document.querySelector('#app')

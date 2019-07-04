@@ -4,7 +4,8 @@ export class Switcher extends Component {
   constructor() {
     super()
     this.state = {
-      isLoading: false
+      isLoading: false,
+      isAdding: false
     }
   }
 
@@ -38,17 +39,28 @@ export class Switcher extends Component {
     this.setState({ role })
   }
 
+  handleCrudClick = param => {
+    switch (param) {
+      case 'add':
+        return this.setState({ isAdding: true })
+      default:
+        break
+    }
+  }
+
   render() {
     let child
     if (this.state.isLoading)
       child = <div className="col s12 center-align">{React.cloneElement(this.props.children[0])}</div>
     else if (this.state.role === null)
       child = React.cloneElement(this.props.children[1], { onSubmit: this.switchRole })
+    else if (this.state.isAdding)
+      child = React.cloneElement(this.props.children[3])
     else if (this.state.role === 'guard' || this.state.role === 'hr')
       child = React.cloneElement(this.props.children[2], 
-        { role: this.state.role, onSubmit: this.switchRole })
+        { role: this.state.role, onSubmit: this.switchRole, onCrudClick: this.handleCrudClick })
     else if (this.state.role === 'admin')
-      child = React.cloneElement(this.props.children[3])
+      child = React.cloneElement(this.props.children[4])
     return (
       <div>{child}</div>
     )
