@@ -14,7 +14,6 @@ export class Employees extends Component {
   }
 
   handleAnimation = () => {
-    this.setState({ isAnimating: false, isLoading: false })
     if (this.state.notAuthorized)
       this.props.onSubmit(null)
     if (this.state.isAdding) {
@@ -78,7 +77,7 @@ export class Employees extends Component {
                 { ...this.state.employee, role: this.props.role })
             : ''}
             {this.props.role === 'hr'
-            ? React.cloneElement(this.props.children[3], { onCrudClick: this.handleAddClick })
+            ? React.cloneElement(this.props.children[3], { onAddClick: this.handleAddClick })
             : ''}
           </div>
         </div>

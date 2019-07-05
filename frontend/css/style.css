@@ -73,6 +73,10 @@ input[type=password]:not(.browser-default):focus:not([readonly]) {
   color: #ffffff;
 }
 
+.btn, .btn:hover {
+  background-color: #3399ff;
+}
+
 .slide-out {
   animation: slide-out 0.5s linear;
   -webkit-animation: slide-out 0.5s linear 0.001s;

@@ -42,7 +42,7 @@ export class Switcher extends Component {
   handleCrudClick = param => {
     switch (param) {
       case 'add':
-        return this.setState({ isAdding: true })
+        return this.setState(({ isAdding }) => ({ isAdding: !isAdding }))
       default:
         break
     }
@@ -55,7 +55,7 @@ export class Switcher extends Component {
     else if (this.state.role === null)
       child = React.cloneElement(this.props.children[1], { onSubmit: this.switchRole })
     else if (this.state.isAdding)
-      child = React.cloneElement(this.props.children[3])
+      child = React.cloneElement(this.props.children[3], { onCrudClick: this.handleCrudClick })
     else if (this.state.role === 'guard' || this.state.role === 'hr')
       child = React.cloneElement(this.props.children[2], 
         { role: this.state.role, onSubmit: this.switchRole, onCrudClick: this.handleCrudClick })

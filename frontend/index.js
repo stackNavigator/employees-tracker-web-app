@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import 'materialize-css/dist/css/materialize.min.css'
+import 'materialize-css/dist/js/materialize.min.js'
 import './css/style.css'
 
 import { Switcher } from './components/Switcher'
@@ -16,7 +17,7 @@ import { AddEmployee } from './components/AddEmployee'
 ReactDOM.render(
   <Switcher>
     <Loader color="blue"/>
-    <SignIn text='Вхід до системи'>
+    <SignIn text="Вхід до системи">
       <Loader color="blue"/>
     </SignIn>
     <Employees>
@@ -25,7 +26,9 @@ ReactDOM.render(
       <InfoCard />
       <AddButton />
     </Employees>
-    <AddEmployee />
+    <AddEmployee text="Внесення працівника">
+      <Loader color="blue" />
+    </AddEmployee>
     <Admin />
   </Switcher>,
   document.querySelector('#app')

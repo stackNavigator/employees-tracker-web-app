@@ -75,7 +75,6 @@ export class SignIn extends Component {
   }
 
   handleAnimation = () => {
-    this.setState({ isAnimating: false, isLoading: false })
     this.props.onSubmit(this.state.role)
   }
 
