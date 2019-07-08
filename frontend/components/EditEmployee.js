@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-export class AddEmployee extends Component {
+export class EditEmployee extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -65,7 +65,7 @@ export class AddEmployee extends Component {
   handleAnimation = () => {
     if (this.state.notAuthorized)
       this.props.onSubmit(null)
-    this.props.onCrudClick('add')
+    this.props.onCrudClick('edit')
   }
 
   handleInputChange = ({ target: { name, value } }) => {
@@ -94,7 +94,7 @@ export class AddEmployee extends Component {
         const { patternMsg } = input
         inputDOM.setCustomValidity(patternMsg)
         return false
-      case !this.checkFileSize(files):
+      case files && !this.checkFileSize(files):
         inputDOM.setCustomValidity('Фото повинно важити менше ніж 3 Мб.')
         return false
       default:
@@ -104,7 +104,7 @@ export class AddEmployee extends Component {
   }
 
   checkFileSize = files => {
-    if (files && files[0].size > 3 * 1024 * 1024) 
+    if (files[0].size > 3 * 1024 * 1024)
       return false
     return true
   }
@@ -116,16 +116,17 @@ export class AddEmployee extends Component {
 
   handleSubmit = () => {
     const validated = this.state.inputs.map(input => this.validateInput(input))
-    validated.push(this.validateInput({ name: 'profilePic' }))
+    const { files } = document.querySelector('[name=profilePic]')
+    files.length ? validated.push(this.validateInput({ name: 'profilePic' })) : ''
     if (validated.includes(false))
       return
     this.setState({ isLoading: true })
     const body = new FormData()
     for (let input of this.state.inputs)
-      body.append(input.name, document.querySelector(`[name=${input.name}]`).value)
-    body.append('profilePic', document.querySelector('[name=profilePic]').files[0])
-    fetch(`http://localhost:3502/api/employees`, {
-      method: 'POST',
+      input.value ? body.append(input.name, document.querySelector(`[name=${input.name}]`).value) : ''
+    files.length ? body.append('profilePic', document.querySelector('[name=profilePic]').files[0]) : ''
+    fetch(`http://localhost:3502/api/employee/${this.props.id}`, {
+      method: 'PATCH',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       },
@@ -151,7 +152,7 @@ export class AddEmployee extends Component {
             <input name={name} onChange={this.handleInputChange}
             value={value} onInput={() => this.validateInput(input)}
             type={type} placeholder={placeholder} minLength={min}
-            maxLength={max} pattern={pattern} required />
+            maxLength={max} pattern={pattern} />
           </div>
         </div>
       )
@@ -164,7 +165,7 @@ export class AddEmployee extends Component {
           <div className="col s12 file-field input-field">
             <div className="btn">
               <span>Фото</span>
-              <input name="profilePic" type="file" required />
+              <input name="profilePic" type="file" />
             </div>
             <div className="file-path-wrapper">
               <input className="file-path" id="inputField" type="text" placeholder="Завантажте фото" />

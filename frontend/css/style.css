@@ -4,6 +4,10 @@ input[type=password]:not(.browser-default):focus:not([readonly]) {
   box-shadow: 0 1px 0 0 #3399ff;
 }
 
+.input-field .prefix.active {
+  color: #3399ff;
+}
+
 ::placeholder {
   font-size: 1.2rem;
 }

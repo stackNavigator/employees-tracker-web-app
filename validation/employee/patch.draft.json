@@ -22,7 +22,7 @@
     "position": {
       "type": "string",
       "maxLength": 100,
-      "pattern": "^[А-ЩЬЮЯЇІЄҐ][а-щьюяїієґ]+(-[А-ЩЬЮЯЇІЄҐ])*[а-щьюяїієґ]*$"
+      "pattern": "^[А-ЩЬЮЯЇІЄҐ][а-щьюяїієґ0-9- ]+$"
     },
     "personnelName": {
       "type": "string",

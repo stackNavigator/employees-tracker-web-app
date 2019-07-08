@@ -5,30 +5,43 @@ export class Employees extends Component {
     super()
     this.state = {
       errorMessage: '',
-      employee: null,
+      employees: [],
       isLoading: false,
       isAnimating: false,
       notAuthorized: false,
-      isAdding: false
+      isAdding: false,
+      isEditing: false,
+      isRemoving: false,
+      currentKey: null
     }
   }
 
   handleAnimation = () => {
     if (this.state.notAuthorized)
       this.props.onSubmit(null)
-    if (this.state.isAdding) {
+    if (this.state.isAdding)
       this.props.onCrudClick('add')
-    }
+    if (this.state.isEditing)
+      this.props.onCrudClick('edit', this.state.currentKey)
+    if (this.state.isRemoving)
+      this.props.onCrudClick('remove', this.state.currentKey)
   }
 
   handleAddClick = () => {
     this.setState({ isAnimating: true, isAdding: true })
   }
 
+  handleEditClick = key => {
+    this.setState({ isAnimating: true, isEditing: true, currentKey: key })
+  }
+
+  handleRemoveClick = key => {
+    this.setState({ isAnimating: true, isRemoving: true, currentKey: key })
+  }
+
   handleLoading = field => {
-    this.setState({ isLoading: true, errorMessage: '', employee: '' })
-    fetch(`http://localhost:3502/api/employees?query=${field}`,
-    {
+    this.setState({ isLoading: true, errorMessage: '', employees: [] })
+    fetch(`http://localhost:3502/api/employees?query=${field}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -43,13 +56,11 @@ export class Employees extends Component {
         return res.json()
     })
     .then(({ employee }) => {
-      this.setState({ employee: employee[0], isLoading: false })
+      this.setState({ employees: employee, isLoading: false })
     })
-    .catch(err => {
-      err === 'Користувач не авторизований.'
+    .catch(err => err === 'Користувач не авторизований.'
       ? this.setState({ isAnimating: true, notAuthorized: true })
-      : this.setState({ errorMessage: err, isLoading: false })
-    })
+      : this.setState({ errorMessage: err, isLoading: false }))
   }
 
   render() {
@@ -72,9 +83,10 @@ export class Employees extends Component {
         <div className="col s12">
           <div className="custom-row">
             <div className="custom-col center-align"></div>
-            {this.state.employee
-            ? React.cloneElement(this.props.children[2], 
-                { ...this.state.employee, role: this.props.role })
+            {this.state.employees.length
+            ? this.state.employees.map(employee => React.cloneElement(this.props.children[2], 
+              { ...employee, role: this.props.role, key: employee._id, 
+                onEditClick: this.handleEditClick, onRemoveClick: this.handleRemoveClick }))
             : ''}
             {this.props.role === 'hr'
             ? React.cloneElement(this.props.children[3], { onAddClick: this.handleAddClick })

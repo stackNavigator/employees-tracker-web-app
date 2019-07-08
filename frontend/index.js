@@ -13,6 +13,8 @@ import { SearchField } from './components/SearchField'
 import { InfoCard } from './components/InfoCard'
 import { AddButton } from './components/AddButton'
 import { AddEmployee } from './components/AddEmployee'
+import { EditEmployee } from './components/EditEmployee'
+import { RemoveEmployee } from './components/RemoveEmployee'
 
 ReactDOM.render(
   <Switcher>
@@ -29,6 +31,12 @@ ReactDOM.render(
     <AddEmployee text="Внесення працівника">
       <Loader color="blue" />
     </AddEmployee>
+    <EditEmployee text="Редагування працівника">
+      <Loader color="blue" />
+    </EditEmployee>
+    <RemoveEmployee text="Видалення працівника">
+      <Loader color="blue" />
+    </RemoveEmployee>
     <Admin />
   </Switcher>,
   document.querySelector('#app')
