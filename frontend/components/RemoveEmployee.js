@@ -4,6 +4,7 @@ export class RemoveEmployee extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      errorMessage: '',
       isLoading: false,
       isAnimating: false,
       notAuthorized: false
@@ -21,7 +22,7 @@ export class RemoveEmployee extends Component {
   }
 
   handleSubmit = () => {
-    this.setState({ isLoading: true })
+    this.setState({ isLoading: true, errorMessage: '' })
     fetch(`http://localhost:3502/api/employee/${this.props.id}`, {
       method: 'DELETE',
       headers: {
@@ -31,11 +32,13 @@ export class RemoveEmployee extends Component {
     .then(res => {
       if (res.status === 401)
         throw 'Користувач не авторизований.'
+      if (res.status === 500)
+        throw res.json()
     })
     .then(() => this.setState({ isAnimating: true }))
     .catch(err => err === 'Користувач не авторизований.' 
       ? this.setState({ isAnimating: true, notAuthorized: true }) 
-      : '')
+      : this.setState({ errorMessage: err.message, isLoading: false }))
   }
 
   render() {
@@ -46,6 +49,12 @@ export class RemoveEmployee extends Component {
       <div className="row">
         <br />
         <h5 className="col s12 center-align">Ви впевнені у видаленні?</h5>
+        {this.state.errorMessage
+        ? 
+        <div className="col s12 center-align err-message">
+          <h5>{this.state.errorMessage}</h5>
+        </div>
+        : ''}
         {this.state.isLoading
           ?
           <div className="col s12 center-align">

@@ -4,6 +4,7 @@ export class EditEmployee extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      errorMessage: '',
       isLoading: false,
       isAnimating: false,
       notAuthorized: false,
@@ -120,7 +121,7 @@ export class EditEmployee extends Component {
     files.length ? validated.push(this.validateInput({ name: 'profilePic' })) : ''
     if (validated.includes(false))
       return
-    this.setState({ isLoading: true })
+    this.setState({ isLoading: true, errorMessage: '' })
     const body = new FormData()
     for (let input of this.state.inputs)
       input.value ? body.append(input.name, document.querySelector(`[name=${input.name}]`).value) : ''
@@ -135,12 +136,14 @@ export class EditEmployee extends Component {
     .then(res => {
       if (res.status === 401)
         throw 'Користувач не авторизований.'
+      if (res.status === 500)
+        throw res.json()
       return res.json()
     })
     .then(() => this.setState({ isAnimating: true }))
     .catch(err => err === 'Користувач не авторизований.' 
-      ? this.setState({ isAnimating: true, notAuthorized: true }) 
-      : '')
+      ? this.setState({ isAnimating: true, notAuthorized: true })
+      : this.setState({ errorMessage: err.message, isLoading: false }))
   }
 
   render() {
@@ -172,6 +175,12 @@ export class EditEmployee extends Component {
             </div>
           </div>
           {inputs}
+          {this.state.errorMessage
+          ? 
+          <div className="col s12 center-align err-message">
+            <h5>{this.state.errorMessage}</h5>
+          </div>
+          : ''}
           {this.state.isLoading 
           ?
           <div className="col s12 center-align">

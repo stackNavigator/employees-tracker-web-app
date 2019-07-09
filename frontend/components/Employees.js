@@ -52,15 +52,24 @@ export class Employees extends Component {
         throw 'Працівника не знайдено.'
       if (res.status === 401)
         throw 'Користувач не авторизований.'
+      if (res.status === 500)
+        throw res.json()
       if (res.status === 200)
         return res.json()
     })
     .then(({ employee }) => {
       this.setState({ employees: employee, isLoading: false })
     })
-    .catch(err => err === 'Користувач не авторизований.'
-      ? this.setState({ isAnimating: true, notAuthorized: true })
-      : this.setState({ errorMessage: err, isLoading: false }))
+    .catch(err => {
+      switch (err) {
+        case 'Користувач не авторизований.':
+          return this.setState({ isAnimating: true, notAuthorized: true })
+        case 'Працівника не знайдено.':
+          return this.setState({ errorMessage: err, isLoading: false })
+        default:
+          return this.setState({ errorMessage: err.message, isLoading: false })
+      }
+    })
   }
 
   render() {
