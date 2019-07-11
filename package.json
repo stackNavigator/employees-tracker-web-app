@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "jest tests/employee --detectOpenHandles",
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "dev": "webpack --mode development && node server.js",
     "build": "webpack --mode production"
   },

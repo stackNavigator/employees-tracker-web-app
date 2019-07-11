@@ -2,6 +2,7 @@ const { ObjectId } = require('mongodb')
 
 const { NotFoundError, ValidationError } = require('../services/handle-errors')
 const { deleteEmployeeImage } = require('../services/file-manager')
+const { getDate } = require('../services/date-formatter')
 const { validate } = require('../services/validator')
 const employeeSchemas = {
   patch: 'employees-tracker/employee-patch'
@@ -42,7 +43,9 @@ module.exports = class {
     const { key } = file
     const { insertedId } = await this.dbClient.insertOne({
       profilePic: `https://employees-tracker-media.s3.amazonaws.com/profilePics/${key}`,
-      ...payload
+      ...payload,
+      hasArrived: null,
+      effectiveSchedule: []
     })
     return insertedId
   }
@@ -115,6 +118,39 @@ module.exports = class {
         const { params: { id } } = req
         if (await this._removeEmployee(id))
           return res.status(204).end()
+      }
+      catch (error) {
+        next(error)
+      }
+    }
+  }
+
+  async _updateSchedule (id) {
+    const doc = await this.dbClient.findOne({ _id: ObjectId(id) })
+    if (!doc) throw new NotFoundError('Employee was not found.')
+    const currentDate = new Date().toLocaleString('en-US', {
+      timeZone: 'Europe/Kiev'
+    })
+    const { hasArrived } = doc
+    const arrivalTime = hasArrived ? null : getDate(currentDate)
+    await this.dbClient.updateOne({
+      _id: ObjectId(id)
+    }, {
+      $set: {
+        hasArrived: arrivalTime
+      }
+    })
+    return id
+  }
+
+  updateSchedule () {
+    return async (req, res, next) => {
+      try {
+        const { params: { id } } = req
+        return res.status(200).json({
+          message: 'Schedule was successfully updated.',
+          employeeId: await this._updateSchedule(id)
+        })
       }
       catch (error) {
         next(error)
