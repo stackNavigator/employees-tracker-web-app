@@ -1,4 +1,6 @@
 const multer = require('multer')
+const multerS3 = require('multer-s3')
+const aws = require('aws-sdk')
 const bcrypt = require('bcrypt')
 
 const { validate } = require('./validator')
@@ -7,8 +9,25 @@ const employeeSchemas = {
   add: 'employees-tracker/employee-add',
   patch: 'employees-tracker/employee-patch'
 }
+require('dotenv').config()
 
-const employeeStorage = multer.diskStorage({
+const s3 = new aws.S3({
+  accessKeyId: process.env.ACCESS_KEY_ID,
+  secretAccessKey: process.env.SECRET_ACCESS_KEY
+})
+const employeeStorage = multerS3({
+  s3,
+  bucket: `${process.env.BUCKET_NAME}/profilePics`,
+  acl: 'public-read',
+  cacheControl: 'max-age=8035200',
+  key: (_, file, cb) => {
+    const { mimetype, originalname } = file
+    const [ __, ext ] = mimetype.split('/')
+    cb(null, `${bcrypt.hashSync(`${originalname}${Date.now()}`, 10).replace(/\//g, '')}.${ext}`)
+  }
+})
+
+const _ = multer.diskStorage({
   destination: (_, __, cb) => {
     cb(null, './profilePics')
   },
@@ -19,7 +38,7 @@ const employeeStorage = multer.diskStorage({
   }
 })
 const employeeLimits = {
-  fileSize: 1024 * 1024 * 5
+  fileSize: 1024 * 1024 * 3
 }
 const employeeFileFilter = async (req, file, cb) => {
   const { path, body, params: { id } } = req
@@ -44,5 +63,11 @@ const employeeImgUploader = multer({
 module.exports = {
   uploadEmployeeImage (field) {
     return employeeImgUploader.single(field)
+  },
+  async deleteEmployeeImage (name) {
+    await s3.deleteObject({
+      Bucket: `${process.env.BUCKET_NAME}`,
+      Key: `profilePics/${name}`
+    }).promise()
   }
 }

@@ -18,7 +18,7 @@ export class InfoCard extends Component {
       <div className="custom-col center-align">
         <div className="card">
           <div className="card-image">
-            <img className="employee-pic" src="https://via.placeholder.com/350" />
+            <img className="employee-pic" src={this.props.profilePic} />
           </div>
           <span className="card-title">
             {`${this.props.surname} ${this.props.name} ${this.props.secondName}`}

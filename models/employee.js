@@ -1,6 +1,7 @@
 const { ObjectId } = require('mongodb')
 
 const { NotFoundError, ValidationError } = require('../services/handle-errors')
+const { deleteEmployeeImage } = require('../services/file-manager')
 const { validate } = require('../services/validator')
 const employeeSchemas = {
   patch: 'employees-tracker/employee-patch'
@@ -38,9 +39,9 @@ module.exports = class {
 
   async _createEmployee (payload, file) {
     if (!file) throw new ValidationError('File was not included.')
-    const { path } = file
+    const { key } = file
     const { insertedId } = await this.dbClient.insertOne({
-      profilePic: path,
+      profilePic: `https://employees-tracker-media.s3.amazonaws.com/profilePics/${key}`,
       ...payload
     })
     return insertedId
@@ -64,8 +65,10 @@ module.exports = class {
     const doc = await this.dbClient.findOne({ _id: ObjectId(id) })
     if (!doc) throw new NotFoundError('Employee was not found.')
     if (file) {
-      payload.profilePic = file.path
-      //delete old file
+      const { key } = file
+      payload.profilePic = `https://employees-tracker-media.s3.amazonaws.com/profilePics/${key}`
+      const { profilePic } = doc
+      await deleteEmployeeImage(profilePic.slice(profilePic.lastIndexOf('/') + 1))
     }
     else {
       const validatedPayload = await validate(employeeSchemas.patch, payload)
@@ -100,7 +103,8 @@ module.exports = class {
   async _removeEmployee (id) {
     const doc = await this.dbClient.findOne({ _id: ObjectId(id) })
     if (!doc) throw new NotFoundError('Employee was not found.')
-    //delete old file
+    const { profilePic } = doc
+    await deleteEmployeeImage(profilePic.slice(profilePic.lastIndexOf('/') + 1))
     await this.dbClient.deleteOne({ _id: ObjectId(id) })
     return true
   }

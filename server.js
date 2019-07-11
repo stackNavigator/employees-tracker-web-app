@@ -12,7 +12,7 @@ const { handleErrors } = require('./services/handle-errors')
     require('dotenv').config()
     const { PORT, DB_URI } = process.env
     await connect(DB_URI)
-
+    
     express()
       .use(cors())
       .disable('x-powered-by')
