@@ -12,8 +12,7 @@ import { Loader } from './components/Loader'
 import { SearchField } from './components/SearchField'
 import { InfoCard } from './components/InfoCard'
 import { AddButton } from './components/AddButton'
-import { AddEmployee } from './components/AddEmployee'
-import { EditEmployee } from './components/EditEmployee'
+import { InputForm } from './components/InputForm'
 import { RemoveEmployee } from './components/RemoveEmployee'
 
 ReactDOM.render(
@@ -28,12 +27,19 @@ ReactDOM.render(
       <InfoCard />
       <AddButton />
     </Employees>
-    <AddEmployee text="Внесення працівника">
+    <InputForm 
+    text="Внесення працівника"
+    url="http://localhost:3502/api/employees"
+    method="POST"
+    crud="add">
       <Loader color="blue" />
-    </AddEmployee>
-    <EditEmployee text="Редагування працівника">
+    </InputForm>
+    <InputForm 
+    text="Редагування працівника"
+    method="PATCH"
+    crud="edit">
       <Loader color="blue" />
-    </EditEmployee>
+    </InputForm>
     <RemoveEmployee text="Видалення працівника">
       <Loader color="blue" />
     </RemoveEmployee>

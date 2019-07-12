@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 
 export class Loader extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
   }
 
   render() {

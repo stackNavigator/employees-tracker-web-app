@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-export class AddEmployee extends Component {
+export class InputForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -11,75 +11,24 @@ export class AddEmployee extends Component {
       isResolved: false,
       isRejected: false,
       isActive: true,
-      inputs: [
-        {
-          name: 'surname',
-          value: '',
-          min: 2,
-          max: 100,
-          type: 'text',
-          pattern: '^[А-ЩЬЮЯЇІЄҐ\'][а-щьюяїієґ\']+(-[А-ЩЬЮЯЇІЄҐ\'])*[а-щьюяїієґ\']*$',
-          patternMsg: 'Дозволяються лише українські літери та символ "-".',
-          placeholder: 'Введіть прізвище'
-        },
-        {
-          name: 'name',
-          value: '',
-          min: 2,
-          max: 100,
-          type: 'text',
-          pattern: '^[А-ЩЬЮЯЇІЄҐ\'][а-щьюяїієґ\']+(-[А-ЩЬЮЯЇІЄҐ\'])*[а-щьюяїієґ\']*$',
-          patternMsg: 'Дозволяються лише українські літери та символ "-".',
-          placeholder: `Введіть ім'я`
-        },
-        {
-          name: 'secondName',
-          value: '',
-          min: 2,
-          max: 100,
-          type: 'text',
-          pattern: '^[А-ЩЬЮЯЇІЄҐ\'][а-щьюяїієґ\']+(-[А-ЩЬЮЯЇІЄҐ\'])*-?[а-щьюяїієґ\']*$',
-          patternMsg: 'Дозволяються лише українські літери та символ "-".',
-          placeholder: 'Введіть по батькові'
-        },
-        {
-          name: 'position',
-          value: '',
-          min: 2,
-          max: 100,
-          type: 'text',
-          pattern: '^[А-ЩЬЮЯЇІЄҐ][а-щьюяїієґ0-9- ]+$',
-          patternMsg: 'Дозволяються лише українські літери та цифри.',
-          placeholder: 'Введіть посаду'
-        },
-        {
-          name: 'personnelName',
-          value: '',
-          min: 1,
-          max: 100,
-          type: 'text',
-          pattern: '^[0-9]+$',
-          patternMsg: 'Дозволяються лише цифри.',
-          placeholder: 'Введіть табельний номер'
-        }
-      ]
+      surname: '',
+      name: '',
+      secondName: '',
+      position: '',
+      personnelName: ''
     }
   }
 
   handleAnimation = () => {
     if (this.state.notAuthorized)
       this.props.onSubmit(null)
-    this.props.onCrudClick('add')
+    this.props.onCrudClick(this.props.crud)
   }
 
   handleInputChange = ({ target: { name, value } }) => {
-    this.setState(prevState => ({
-      inputs: prevState.inputs.map(input => (
-        input.name === name
-          ? { ...input, value }
-          : input
-      ))
-    }))
+    this.setState({
+      [name]: value
+    })
   }
 
   handleRequestResult = status => {
@@ -130,17 +79,21 @@ export class AddEmployee extends Component {
   }
 
   handleSubmit = () => {
-    const validated = this.state.inputs.map(input => this.validateInput(input))
-    validated.push(this.validateInput({ name: 'profilePic' }))
+    const validated = this.props.inputs.map(input => this.validateInput(input))
+    this.props.method === 'POST' ? validated.push(this.validateInput({ name: 'profilePic' })) : ''
+    const { files } = document.querySelector('[name=profilePic]')
+    files.length ? validated.push(this.validateInput({ name: 'profilePic' })) : ''
     if (validated.includes(false))
       return
     this.setState({ isLoading: true, errorMessage: '' })
     const body = new FormData()
-    for (let input of this.state.inputs)
-      body.append(input.name, document.querySelector(`[name=${input.name}]`).value)
-    body.append('profilePic', document.querySelector('[name=profilePic]').files[0])
-    fetch(`http://localhost:3502/api/employees`, {
-      method: 'POST',
+    for (let input of this.props.inputs) {
+      const { name } = input
+      this.state[name] ? body.append(name, this.state[name]) : ''
+    }
+    files.length ? body.append('profilePic', document.querySelector('[name=profilePic]').files[0]) : ''
+    fetch(this.props.url, {
+      method: this.props.method,
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       },
@@ -160,15 +113,18 @@ export class AddEmployee extends Component {
   }
 
   render() {
-    const inputs = this.state.inputs.map(input => {
-      const { name, value, min, max, type, pattern, placeholder } = input
+    const inputs = this.props.inputs.map(input => {
+      const { name, min, max, type, pattern, placeholder } = input
       return (
-        <div className="col s12" key={name}>
-          <div className="col s12 input-field">
-            <input name={name} onChange={this.handleInputChange}
-            value={value} onInput={() => this.validateInput(input)}
-            type={type} placeholder={placeholder} minLength={min}
-            maxLength={max} pattern={pattern} required />
+        <div key={name}>
+          <div className="col s12">
+            <div className="col s12 input-field">
+              <input name={name} onChange={this.handleInputChange}
+              value={this.state[name]} onInput={() => this.validateInput(input)}
+              type={type} placeholder={placeholder} minLength={min}
+              maxLength={max} pattern={pattern} required={this.props.method === 'POST'
+              ? true : false} />
+            </div>
           </div>
         </div>
       )
@@ -181,7 +137,8 @@ export class AddEmployee extends Component {
           <div className="col s12 file-field input-field">
             <div className="btn">
               <span>Фото</span>
-              <input name="profilePic" type="file" required />
+              <input name="profilePic" type="file" required={this.props.method === 'POST' 
+              ? true : false} />
             </div>
             <div className="file-path-wrapper">
               <input className="file-path" id="inputField" type="text" placeholder="Завантажте фото" />
@@ -231,4 +188,59 @@ export class AddEmployee extends Component {
       </div>
     )
   }
+}
+
+InputForm.defaultProps = {
+  inputs: [
+    {
+      name: 'surname',
+      value: '',
+      min: 2,
+      max: 100,
+      type: 'text',
+      pattern: '^[А-ЩЬЮЯЇІЄҐ\'][а-щьюяїієґ\']+(-[А-ЩЬЮЯЇІЄҐ\'])*[а-щьюяїієґ\']*$',
+      patternMsg: 'Дозволяються лише українські літери та символ "-".',
+      placeholder: 'Введіть прізвище'
+    },
+    {
+      name: 'name',
+      value: '',
+      min: 2,
+      max: 100,
+      type: 'text',
+      pattern: '^[А-ЩЬЮЯЇІЄҐ\'][а-щьюяїієґ\']+(-[А-ЩЬЮЯЇІЄҐ\'])*[а-щьюяїієґ\']*$',
+      patternMsg: 'Дозволяються лише українські літери та символ "-".',
+      placeholder: `Введіть ім'я`
+    },
+    {
+      name: 'secondName',
+      value: '',
+      min: 2,
+      max: 100,
+      type: 'text',
+      pattern: '^[А-ЩЬЮЯЇІЄҐ\'][а-щьюяїієґ\']+(-[А-ЩЬЮЯЇІЄҐ\'])*-?[а-щьюяїієґ\']*$',
+      patternMsg: 'Дозволяються лише українські літери та символ "-".',
+      placeholder: 'Введіть по батькові'
+    },
+    {
+      name: 'position',
+      value: '',
+      min: 2,
+      max: 100,
+      type: 'text',
+      pattern: '^[А-ЩЬЮЯЇІЄҐ][а-щьюяїієґ0-9- ]+$',
+      patternMsg: 'Дозволяються лише українські літери та цифри.',
+      placeholder: 'Введіть посаду'
+    },
+    {
+      name: 'personnelName',
+      value: '',
+      min: 1,
+      max: 100,
+      type: 'text',
+      pattern: '^[0-9]+$',
+      patternMsg: 'Дозволяються лише цифри.',
+      placeholder: 'Введіть табельний номер'
+    }
+  ]
 }
