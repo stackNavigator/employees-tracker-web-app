@@ -132,14 +132,13 @@ module.exports = class {
       timeZone: 'Europe/Kiev'
     })
     const { hasArrived } = doc
-    const arrivalTime = hasArrived ? null : getDate(currentDate)
-    await this.dbClient.updateOne({
-      _id: ObjectId(id)
-    }, {
-      $set: {
-        hasArrived: arrivalTime
-      }
-    })
+    const [ fieldDate ] = hasArrived ? hasArrived.split(',') : []
+    fieldDate
+    ? await this.dbClient.updateOne({ _id: ObjectId(id) }, 
+      { $push: { effectiveSchedule: { [fieldDate]: `${hasArrived}-${getDate(currentDate)}`} },
+        $set: { hasArrived: null } })
+    : await this.dbClient.updateOne({ _id: ObjectId(id) }, 
+      { $set: { hasArrived: getDate(currentDate) } })
     return id
   }
 
