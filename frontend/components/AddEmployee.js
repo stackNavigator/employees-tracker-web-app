@@ -8,6 +8,9 @@ export class AddEmployee extends Component {
       isLoading: false,
       isAnimating: false,
       notAuthorized: false,
+      isResolved: false,
+      isRejected: false,
+      isActive: true,
       inputs: [
         {
           name: 'surname',
@@ -15,7 +18,7 @@ export class AddEmployee extends Component {
           min: 2,
           max: 100,
           type: 'text',
-          pattern: '^[А-ЩЬЮЯЇІЄҐ][а-щьюяїієґ]+(-[А-ЩЬЮЯЇІЄҐ])*[а-щьюяїієґ]*$',
+          pattern: '^[А-ЩЬЮЯЇІЄҐ\'][а-щьюяїієґ\']+(-[А-ЩЬЮЯЇІЄҐ\'])*[а-щьюяїієґ\']*$',
           patternMsg: 'Дозволяються лише українські літери та символ "-".',
           placeholder: 'Введіть прізвище'
         },
@@ -25,7 +28,7 @@ export class AddEmployee extends Component {
           min: 2,
           max: 100,
           type: 'text',
-          pattern: '^[А-ЩЬЮЯЇІЄҐ][а-щьюяїієґ]+(-[А-ЩЬЮЯЇІЄҐ])*[а-щьюяїієґ]*$',
+          pattern: '^[А-ЩЬЮЯЇІЄҐ\'][а-щьюяїієґ\']+(-[А-ЩЬЮЯЇІЄҐ\'])*[а-щьюяїієґ\']*$',
           patternMsg: 'Дозволяються лише українські літери та символ "-".',
           placeholder: `Введіть ім'я`
         },
@@ -35,7 +38,7 @@ export class AddEmployee extends Component {
           min: 2,
           max: 100,
           type: 'text',
-          pattern: '^[А-ЩЬЮЯЇІЄҐ][а-щьюяїієґ]+(-[А-ЩЬЮЯЇІЄҐ])*[а-щьюяїієґ]*$',
+          pattern: '^[А-ЩЬЮЯЇІЄҐ\'][а-щьюяїієґ\']+(-[А-ЩЬЮЯЇІЄҐ\'])*-?[а-щьюяїієґ\']*$',
           patternMsg: 'Дозволяються лише українські літери та символ "-".',
           placeholder: 'Введіть по батькові'
         },
@@ -77,6 +80,17 @@ export class AddEmployee extends Component {
           : input
       ))
     }))
+  }
+
+  handleRequestResult = status => {
+    this.setState({ isActive: false })
+    if (status === 'resolved')
+      this.setState({ isLoading: false, isResolved: true })
+    if (status === 'rejected')
+      this.setState({ isLoading: false, isRejected: true, notAuthorized: true })
+    setTimeout(() => {
+      this.setState({ isAnimating: true })
+    }, 1000)
   }
 
   validateInput = input => {
@@ -139,9 +153,9 @@ export class AddEmployee extends Component {
         throw res.json()
       return res.json()
     })
-    .then(() => this.setState({ isAnimating: true }))
+    .then(() => this.handleRequestResult('resolved'))
     .catch(err => err === 'Користувач не авторизований.' 
-      ? this.setState({ isAnimating: true, notAuthorized: true }) 
+      ? this.handleRequestResult('rejected')
       : this.setState({ errorMessage: err.message, isLoading: false }))
   }
 
@@ -185,7 +199,21 @@ export class AddEmployee extends Component {
           <div className="col s12 center-align">
             {React.Children.toArray(this.props.children)[0]}
           </div>
-          :
+          : ''}
+          {this.state.isResolved
+          ?
+          <div className="col s12 center-align">
+            Resolved
+          </div>
+          : ''}
+          {this.state.isRejected
+          ?
+          <div className="col s12 center-align">
+            Rejected
+          </div>
+          : ''}
+          {this.state.isActive
+          ?
           <div className="col s12 center-align">
             <div className="col s12 m6 center-align">
               <button className="btn-flat btn-edit" onClick={this.handleSubmit}>
@@ -197,7 +225,8 @@ export class AddEmployee extends Component {
                 Скасувати
               </button>
             </div>
-          </div> }
+          </div> 
+          : ''}
         </form>
       </div>
     )
