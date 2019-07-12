@@ -9,6 +9,7 @@ export class Employees extends Component {
       isLoading: false,
       isAnimating: false,
       notAuthorized: false,
+      isRejected: false,
       isAdding: false,
       isEditing: false,
       isRemoving: false,
@@ -39,6 +40,13 @@ export class Employees extends Component {
     this.setState({ isAnimating: true, isRemoving: true, currentKey: key })
   }
 
+  handleRequestResult = () => {
+    this.setState({ isLoading: false, isRejected: true, notAuthorized: true })
+    setTimeout(() => {
+      this.setState({ isAnimating: true })
+    }, 1500)
+  }
+
   handleLoading = field => {
     this.setState({ isLoading: true, errorMessage: '', employees: [] })
     fetch(`http://localhost:3502/api/employees?query=${field}`, {
@@ -63,7 +71,7 @@ export class Employees extends Component {
     .catch(err => {
       switch (err) {
         case 'Користувач не авторизований.':
-          return this.setState({ isAnimating: true, notAuthorized: true })
+          return this.handleRequestResult()
         case 'Працівника не знайдено.':
           return this.setState({ errorMessage: err, isLoading: false })
         default:
@@ -87,6 +95,12 @@ export class Employees extends Component {
         ?
         <div className="col s12 center-align">
           {React.cloneElement(this.props.children[0])}
+        </div>
+        : ''}
+        {this.state.isRejected
+        ?
+        <div className="col s12 center-align">
+          <i className="material-icons reject-tooltip">clear</i>
         </div>
         : ''}
         <div className="col s12">

@@ -90,7 +90,7 @@ export class AddEmployee extends Component {
       this.setState({ isLoading: false, isRejected: true, notAuthorized: true })
     setTimeout(() => {
       this.setState({ isAnimating: true })
-    }, 1000)
+    }, 1500)
   }
 
   validateInput = input => {
@@ -203,13 +203,13 @@ export class AddEmployee extends Component {
           {this.state.isResolved
           ?
           <div className="col s12 center-align">
-            Resolved
+            <i className="material-icons resolve-tooltip">check</i>
           </div>
           : ''}
           {this.state.isRejected
           ?
           <div className="col s12 center-align">
-            Rejected
+            <i className="material-icons reject-tooltip">clear</i>
           </div>
           : ''}
           {this.state.isActive

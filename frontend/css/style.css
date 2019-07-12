@@ -60,12 +60,21 @@ input[type=password]:not(.browser-default):focus:not([readonly]) {
   color: #ffffff;
 }
 
-.btn-delete:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating) {
+.btn-delete:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating), .reject-tooltip {
   color: #ff0000;
 }
+
 .btn-delete:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating):hover {
   background-color: #ff0000;
   color: #ffffff;
+}
+
+.resolve-tooltip {
+  color: #67ff2b;
+}
+
+.resolve-tooltip, .reject-tooltip {
+  font-size: 5rem;
 }
 
 .err-message {
