@@ -28,20 +28,21 @@ ReactDOM.render(
       <InfoCard />
       <AddButton />
     </Employees>
-    <InputForm 
-    text="Внесення працівника"
-    url="http://localhost:3502/api/employees"
-    method="POST"
-    crud="add">
-      <Loader color="blue" />
-    </InputForm>
-    <InputForm 
-    text="Редагування працівника"
-    method="PATCH"
-    crud="edit">
-      <Loader color="blue" />
-    </InputForm>
-    <RequestableUI>
+    <RequestableUI url="http://localhost:3502/api/employees">
+      <Loader color="blue"/>
+      <InputForm 
+      text="Внесення працівника"
+      method="POST"
+      crud="add"/>
+    </RequestableUI>
+    <RequestableUI url="http://localhost:3502/api/employee">
+      <Loader color="blue"/>
+      <InputForm 
+      text="Редагування працівника"
+      method="PATCH"
+      crud="edit"/>
+    </RequestableUI>
+    <RequestableUI url="http://localhost:3502/api/employee">
       <Loader color="blue" />
       <RemoveEmployee text="Видалення працівника" />
     </RequestableUI>

@@ -6,12 +6,12 @@ export class RemoveEmployee extends Component {
   }
 
   handleCancelClick = e => {
-    this.props.cancelClick(e)
+    this.props.cancelClick(e, 'remove')
   }
 
   handleSubmit = () => {
-    this.props.requestStart()
-    fetch(`http://localhost:3502/api/employee/${this.props.id}`, {
+    this.props.requestStart('remove')
+    fetch(`${this.props.url}/${this.props.id}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -26,7 +26,7 @@ export class RemoveEmployee extends Component {
     .then(() => this.props.requestResult('resolved'))
     .catch(err => err === 'Користувач не авторизований.' 
       ? this.props.requestResult('rejected')
-      : this.props.requestError())
+      : this.props.requestError(err))
   }
 
   render() {

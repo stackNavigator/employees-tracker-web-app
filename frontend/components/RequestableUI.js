@@ -10,22 +10,19 @@ export class RequestableUI extends Component {
       notAuthorized: false,
       isResolved: false,
       isRejected: false,
-      isActive: true
+      isActive: true,
+      crud: ''
     }
   }
 
   handleAnimation = () => {
     if (this.state.notAuthorized)
       this.props.onSubmit(null)
-    this.props.onCrudClick('remove')
+    this.props.onCrudClick(this.state.crud)
   }
 
   onCrudClick = param => {
     this.props.onCrudClick(param)
-  }
-
-  onSubmit = param => {
-    this.props.onSubmit(param)
   }
 
   handleRequestResult = status => {
@@ -39,24 +36,33 @@ export class RequestableUI extends Component {
     }, 1500)
   }
 
-  handleCancelClick = e => {
+  handleCancelClick = (e, crud) => {
     e.preventDefault()
-    this.setState({ isAnimating: true })
+    this.setState({ isAnimating: true, crud })
   }
 
-  handleRequestStart = () => this.setState({ isLoading: true, errorMessage: '' })
+  handleRequestStart = crud => this.setState({ 
+    isLoading: true, 
+    errorMessage: '', 
+    crud, 
+    isActive: false 
+  })
 
-  handleRequestError = () => this.setState({ errorMessage: err.message, isLoading: false })
+  handleRequestError = err => this.setState({ 
+    errorMessage: err.message, 
+    isLoading: false, 
+    isActive: true 
+  })
 
   render() {
     return (
       <div className={this.state.isAnimating ? 'slide-out' : ''}
       onAnimationEnd={this.handleAnimation}>
-        {React.cloneElement(this.props.children[1], { id: this.props.id,
-        isActive: this.state.isActive, requestResult: this.handleRequestResult, 
-        requestStart: this.handleRequestStart, requestError: this.handleRequestError, 
-        cancelClick: this.handleCancelClick })}
-        {this.state.errorMessage
+        {React.cloneElement(this.props.children[1], { id: this.props.id, isActive: this.state.isActive,
+        url: this.props.url, onCrudClick: this.handleCrudClick, 
+        requestResult: this.handleRequestResult, requestStart: this.handleRequestStart, 
+        requestError: this.handleRequestError, cancelClick: this.handleCancelClick })}
+        {this.state.errorMessage  
         ?
         <div className="col s12 center-align err-message">
           <h5>{this.state.errorMessage}</h5>

@@ -65,8 +65,7 @@ export class Switcher extends Component {
           onSubmit: this.switchRole })
       case this.state.isEditing:
         return React.cloneElement(this.props.children[4], { onCrudClick: this.handleCrudClick,
-          onSubmit: this.switchRole,
-          url: `http://localhost:3502/api/employee/${this.state.currentId}` })
+          onSubmit: this.switchRole, id: this.state.currentId })
       case this.state.isRemoving:
         return React.cloneElement(this.props.children[5], { onCrudClick: this.handleCrudClick,
           onSubmit: this.switchRole, id: this.state.currentId })

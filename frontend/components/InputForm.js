@@ -4,13 +4,6 @@ export class InputForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      errorMessage: '',
-      isLoading: false,
-      isAnimating: false,
-      notAuthorized: false,
-      isResolved: false,
-      isRejected: false,
-      isActive: true,
       surname: '',
       name: '',
       secondName: '',
@@ -19,27 +12,10 @@ export class InputForm extends Component {
     }
   }
 
-  handleAnimation = () => {
-    if (this.state.notAuthorized)
-      this.props.onSubmit(null)
-    this.props.onCrudClick(this.props.crud)
-  }
-
   handleInputChange = ({ target: { name, value } }) => {
     this.setState({
       [name]: value
     })
-  }
-
-  handleRequestResult = status => {
-    this.setState({ isActive: false })
-    if (status === 'resolved')
-      this.setState({ isLoading: false, isResolved: true })
-    if (status === 'rejected')
-      this.setState({ isLoading: false, isRejected: true, notAuthorized: true })
-    setTimeout(() => {
-      this.setState({ isAnimating: true })
-    }, 1500)
   }
 
   validateInput = input => {
@@ -74,8 +50,7 @@ export class InputForm extends Component {
   }
 
   handleCancelClick = e => {
-    e.preventDefault()
-    this.setState({ isAnimating: true })
+    this.props.cancelClick(e, this.props.crud)
   }
 
   handleSubmit = () => {
@@ -85,14 +60,15 @@ export class InputForm extends Component {
     files.length ? validated.push(this.validateInput({ name: 'profilePic' })) : ''
     if (validated.includes(false))
       return
-    this.setState({ isLoading: true, errorMessage: '' })
+    this.props.requestStart(this.props.crud)
     const body = new FormData()
     for (let input of this.props.inputs) {
       const { name } = input
       this.state[name] ? body.append(name, this.state[name]) : ''
     }
     files.length ? body.append('profilePic', document.querySelector('[name=profilePic]').files[0]) : ''
-    fetch(this.props.url, {
+    const { id = '' } = this.props
+    fetch(`${this.props.url}/${id}`, {
       method: this.props.method,
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -106,10 +82,10 @@ export class InputForm extends Component {
         throw res.json()
       return res.json()
     })
-    .then(() => this.handleRequestResult('resolved'))
+    .then(() => this.props.requestResult('resolved'))
     .catch(err => err === 'Користувач не авторизований.'
-      ? this.handleRequestResult('rejected')
-      : this.setState({ errorMessage: err.message, isLoading: false }))
+      ? this.props.requestResult('rejected')
+      : this.props.requestError(err))
   }
 
   render() {
@@ -130,8 +106,7 @@ export class InputForm extends Component {
       )
     })
     return (
-      <div className={this.state.isAnimating ? 'slide-out' : ''}
-      onAnimationEnd={this.handleAnimation}>
+      <div>
         <h3 className="center-align">{this.props.text}</h3>
         <form className="row" onSubmit={e => e.preventDefault()}>
           <div className="col s12 file-field input-field">
@@ -145,31 +120,7 @@ export class InputForm extends Component {
             </div>
           </div>
           {inputs}
-          {this.state.errorMessage
-          ? 
-          <div className="col s12 center-align err-message">
-            <h5>{this.state.errorMessage}</h5>
-          </div>
-          : ''}
-          {this.state.isLoading 
-          ?
-          <div className="col s12 center-align">
-            {React.Children.toArray(this.props.children)[0]}
-          </div>
-          : ''}
-          {this.state.isResolved
-          ?
-          <div className="col s12 center-align">
-            <i className="material-icons resolve-tooltip">check</i>
-          </div>
-          : ''}
-          {this.state.isRejected
-          ?
-          <div className="col s12 center-align">
-            <i className="material-icons reject-tooltip">clear</i>
-          </div>
-          : ''}
-          {this.state.isActive
+          {this.props.isActive
           ?
           <div className="col s12 center-align">
             <div className="col s12 m6 center-align">
@@ -182,7 +133,7 @@ export class InputForm extends Component {
                 Скасувати
               </button>
             </div>
-          </div> 
+          </div>
           : ''}
         </form>
       </div>
