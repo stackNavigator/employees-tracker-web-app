@@ -9,6 +9,7 @@ import { SignIn } from './components/SignIn'
 import { Employees } from './components/Employees'
 import { Admin } from './components/Admin'
 import { Loader } from './components/Loader'
+import { RequestableUI } from './components/RequestableUI'
 import { SearchField } from './components/SearchField'
 import { InfoCard } from './components/InfoCard'
 import { AddButton } from './components/AddButton'
@@ -40,9 +41,10 @@ ReactDOM.render(
     crud="edit">
       <Loader color="blue" />
     </InputForm>
-    <RemoveEmployee text="Видалення працівника">
+    <RequestableUI>
       <Loader color="blue" />
-    </RemoveEmployee>
+      <RemoveEmployee text="Видалення працівника" />
+    </RequestableUI>
     <Admin />
   </Switcher>,
   document.querySelector('#app')

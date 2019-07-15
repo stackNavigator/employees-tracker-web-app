@@ -107,7 +107,7 @@ export class InputForm extends Component {
       return res.json()
     })
     .then(() => this.handleRequestResult('resolved'))
-    .catch(err => err === 'Користувач не авторизований.' 
+    .catch(err => err === 'Користувач не авторизований.'
       ? this.handleRequestResult('rejected')
       : this.setState({ errorMessage: err.message, isLoading: false }))
   }
