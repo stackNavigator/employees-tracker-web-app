@@ -15,17 +15,23 @@ import { InfoCard } from './components/InfoCard'
 import { AddButton } from './components/AddButton'
 import { InputForm } from './components/InputForm'
 import { RemoveEmployee } from './components/RemoveEmployee'
+import { TriggerScheduleButton } from './components/TriggerScheduleButton'
 
 ReactDOM.render(
-  <Switcher>
+  <Switcher url="http://localhost:3502/api/check-access">
     <Loader color="blue"/>
-    <SignIn text="Вхід до системи">
+    <SignIn text="Вхід до системи" url="http://localhost:3502/api/signin">
       <Loader color="blue"/>
     </SignIn>
     <Employees>
-      <Loader color="blue"/>
-      <SearchField />
-      <InfoCard />
+      <SearchField url="http://localhost:3502/api/employees">
+        <Loader color="blue"/>
+      </SearchField>
+      <InfoCard>
+        <TriggerScheduleButton>
+          <Loader color="blue"/>
+        </TriggerScheduleButton>
+      </InfoCard>
       <AddButton />
     </Employees>
     <RequestableUI url="http://localhost:3502/api/employees">

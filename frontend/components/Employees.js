@@ -4,16 +4,14 @@ export class Employees extends Component {
   constructor() {
     super()
     this.state = {
-      errorMessage: '',
       employees: [],
-      isLoading: false,
-      isAnimating: false,
       notAuthorized: false,
-      isRejected: false,
+      isAnimating: false,
       isAdding: false,
       isEditing: false,
       isRemoving: false,
-      currentKey: null
+      currentKey: null,
+      searchField: ''
     }
   }
 
@@ -40,79 +38,32 @@ export class Employees extends Component {
     this.setState({ isAnimating: true, isRemoving: true, currentKey: key })
   }
 
-  handleRequestResult = () => {
-    this.setState({ isLoading: false, isRejected: true, notAuthorized: true })
-    setTimeout(() => {
-      this.setState({ isAnimating: true })
-    }, 1500)
+  handleInputChange = ({ target: { value }}) => {
+    this.setState({ searchField: value })
   }
 
-  handleLoading = field => {
-    this.setState({ isLoading: true, errorMessage: '', employees: [] })
-    fetch(`http://localhost:3502/api/employees?query=${field}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
-    })
-    .then(res => {
-      if (res.status === 404)
-        throw 'Працівника не знайдено.'
-      if (res.status === 401)
-        throw 'Користувач не авторизований.'
-      if (res.status === 500)
-        throw res.json()
-      if (res.status === 200)
-        return res.json()
-    })
-    .then(({ employee }) => {
-      this.setState({ employees: employee, isLoading: false })
-    })
-    .catch(err => {
-      switch (err) {
-        case 'Користувач не авторизований.':
-          return this.handleRequestResult()
-        case 'Працівника не знайдено.':
-          return this.setState({ errorMessage: err, isLoading: false })
-        default:
-          return this.setState({ errorMessage: err.message, isLoading: false })
-      }
-    })
-  }
+  triggerAnimation = () => this.setState({ isAnimating: true, notAuthorized: true })
+
+  setEmployees = employee => this.setState({ employees: employee, searchField: '' })
 
   render() {
     return (
       <div className={this.state.isAnimating ? 'row slide-out' : 'row'}
       onAnimationEnd={this.handleAnimation}>
-        {React.cloneElement(this.props.children[1], { onLoading: this.handleLoading })}
-        {this.state.errorMessage
-        ? 
-        <div className="col s12 center-align err-message">
-          <h5>{this.state.errorMessage}</h5>
-        </div>
-        : ''}
-        {this.state.isLoading
-        ?
-        <div className="col s12 center-align">
-          {React.cloneElement(this.props.children[0])}
-        </div>
-        : ''}
-        {this.state.isRejected
-        ?
-        <div className="col s12 center-align">
-          <i className="material-icons reject-tooltip">clear</i>
-        </div>
-        : ''}
+        {React.cloneElement(this.props.children[0], { triggerAnimation:  this.triggerAnimation,
+        setEmployees: this.setEmployees, searchField: this.state.searchField, 
+        onInputChange: this.handleInputChange })}
         <div className="col s12">
           <div className="custom-row">
             <div className="custom-col center-align"></div>
             {this.state.employees.length
-            ? this.state.employees.map(employee => React.cloneElement(this.props.children[2], 
+            ? this.state.employees.map(employee => React.cloneElement(this.props.children[1],
               { ...employee, role: this.props.role, key: employee._id, 
-                onEditClick: this.handleEditClick, onRemoveClick: this.handleRemoveClick }))
+              triggerAnimation: this.triggerAnimation, setEmployees: this.setEmployees,
+              onEditClick: this.handleEditClick, onRemoveClick: this.handleRemoveClick }))
             : ''}
             {this.props.role === 'hr'
-            ? React.cloneElement(this.props.children[3], { onAddClick: this.handleAddClick })
+            ? React.cloneElement(this.props.children[2], { onAddClick: this.handleAddClick })
             : ''}
           </div>
         </div>

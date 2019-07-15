@@ -84,7 +84,7 @@ export class SignIn extends Component {
       return
     this.setState({ isLoading: true, isError: false })
     const payload = this.state.inputs.reduce((acc, { name, value }) => ({ ...acc, [name]: value}), {})
-    fetch(`http://localhost:3502/api/signin`, {
+    fetch(this.props.url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -14,7 +14,7 @@ export class Switcher extends Component {
 
   componentDidMount() {
     this.setState({ isLoading: true })
-    fetch(`http://localhost:3502/api/check-access`, {
+    fetch(this.props.url, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`

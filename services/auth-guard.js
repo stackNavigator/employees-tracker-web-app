@@ -12,11 +12,13 @@ module.exports = {
         const role = await models['user'].getUserRole(_id)
         switch (true) {
           case role === 'guard' && req.path === '/employees' && req.method === 'GET':
-            break;
+            break
+          case role === 'guard' && req.path.startsWith('/schedule'):
+            break
           case role === 'hr' && req.path.startsWith('/employee'):
-            break;
+            break
           case role === 'admin':
-            break;
+            break
           default:
             throw new AuthorizationError()
         }

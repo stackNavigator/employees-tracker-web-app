@@ -13,7 +13,8 @@ module.exports = () => {
     .post('/employees', uploadEmployeeImage('profilePic'), models['employee'].createEmployee())
     .patch('/employee/:id', uploadEmployeeImage('profilePic'), models['employee'].updateEmployee())
     .delete('/employee/:id', models['employee'].removeEmployee())
-    .patch('/employee/:id/schedule', models['employee'].updateSchedule())
+    .patch('/schedule/:id/', models['employee'].updateSchedule())
+    .get('/schedule/:id/check-arrival', models['employee'].checkArrival())
     .post('/signup', models['user'].signUp())
     .delete('/users/:id', models['user'].removeUser())
 }

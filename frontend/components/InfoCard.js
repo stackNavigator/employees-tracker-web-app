@@ -28,7 +28,16 @@ export class InfoCard extends Component {
             <br />
             <span>{this.props.position}</span>
           </div>
-          { this.props.role === 'hr'
+          {this.props.role === 'guard' 
+          ?
+          <div className="card-action">
+            {React.cloneElement(this.props.children, { 
+            url: `http://localhost:3502/api/schedule/${this.props._id}`,
+            arrivalUrl: `http://localhost:3502/api/schedule/${this.props._id}/check-arrival`,
+            triggerAnimation: this.props.triggerAnimation, setEmployees: this.props.setEmployees })}
+          </div>
+          : ''}
+          {this.props.role === 'hr'
           ?
           <div className="card-action">
             <button className="btn-flat btn-edit" 

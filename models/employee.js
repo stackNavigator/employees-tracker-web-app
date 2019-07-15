@@ -139,7 +139,7 @@ module.exports = class {
         $set: { hasArrived: null } })
     : await this.dbClient.updateOne({ _id: ObjectId(id) }, 
       { $set: { hasArrived: getDate(currentDate) } })
-    return id
+    return !hasArrived
   }
 
   updateSchedule () {
@@ -148,7 +148,29 @@ module.exports = class {
         const { params: { id } } = req
         return res.status(200).json({
           message: 'Schedule was successfully updated.',
-          employeeId: await this._updateSchedule(id)
+          hasArrived: await this._updateSchedule(id)
+        })
+      }
+      catch (error) {
+        next(error)
+      }
+    }
+  }
+
+  async _checkArrival (id) {
+    const doc = await this.dbClient.findOne({ _id: ObjectId(id) })
+    if (!doc) throw new NotFoundError('Employee was not found.')
+    const { hasArrived } = doc
+    return hasArrived ? true : false
+  }
+
+  checkArrival () {
+    return async (req, res, next) => {
+      try {
+        const { params: { id } } = req
+        return res.status(200).json({
+          message: 'Employee arrival was checked.',
+          hasArrived: await this._checkArrival(id)
         })
       }
       catch (error) {
