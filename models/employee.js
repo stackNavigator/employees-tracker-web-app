@@ -132,13 +132,14 @@ module.exports = class {
       timeZone: 'Europe/Kiev'
     })
     const { hasArrived } = doc
-    const [ fieldDate ] = hasArrived ? hasArrived.split(',') : []
+    const [ fieldDate ] = hasArrived ? getDate('7/18/2019, 02:00').split(',') : []
     fieldDate
-    ? await this.dbClient.updateOne({ _id: ObjectId(id) }, 
-      { $push: { effectiveSchedule: { [fieldDate]: `${hasArrived}-${getDate(currentDate)}`} },
+    ? await this.dbClient.updateOne({ _id: ObjectId(id) },
+      { $push: { effectiveSchedule: { key: new Date('7/18/2019, 02:00'),
+        range: `${hasArrived}-${getDate('7/18/2019, 02:00')}`} },
         $set: { hasArrived: null } })
     : await this.dbClient.updateOne({ _id: ObjectId(id) }, 
-      { $set: { hasArrived: getDate(currentDate) } })
+      { $set: { hasArrived: getDate('7/17/2019, 11:00') } })
     return !hasArrived
   }
 
@@ -171,6 +172,44 @@ module.exports = class {
         return res.status(200).json({
           message: 'Employee arrival was checked.',
           hasArrived: await this._checkArrival(id)
+        })
+      }
+      catch (error) {
+        next(error)
+      }
+    }
+  }
+
+  async _formPersonalReport (id, fromDate, toDate) {
+    const doc = await this.dbClient.findOne({ _id: ObjectId(id) })
+    if (!doc) throw new NotFoundError('Employee was not found.')
+    const newFromDate = new Date(getDate(fromDate))
+    const oldToDate = new Date(getDate(toDate))
+    const newToDate = new Date(oldToDate.setDate(oldToDate.getDate() + 1))
+    return await this.dbClient.aggregate([
+      { $match: { _id: ObjectId(id) } },
+      { $project: {
+        effectiveSchedule: {
+          $filter: {
+            input: '$effectiveSchedule',
+            as: 'date',
+            cond: { 
+              $and: [{ $gte: [ '$$date.key', newFromDate] }, { $lte: [ '$$date.key', newToDate] }]
+            }
+          }
+        }
+      }}
+    ]).toArray()
+  }
+
+  formPersonalReport () {
+    return async (req, res, next) => {
+      try {
+        const { params: { id } } = req
+        const { query: { fromDate, toDate } } = req
+        return res.status(200).json({
+          message: 'Personal report was sucessfully formed.',
+          reportData: await this._formPersonalReport(id, fromDate, toDate)
         })
       }
       catch (error) {
