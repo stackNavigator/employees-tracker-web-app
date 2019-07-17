@@ -26,17 +26,6 @@ const employeeStorage = multerS3({
     cb(null, `${bcrypt.hashSync(`${originalname}${Date.now()}`, 10).replace(/\//g, '')}.${ext}`)
   }
 })
-
-const _ = multer.diskStorage({
-  destination: (_, __, cb) => {
-    cb(null, './profilePics')
-  },
-  filename: (_, file, cb) => {
-    const { mimetype, originalname } = file
-    const [ __, ext ] = mimetype.split('/')
-    cb(null, `${bcrypt.hashSync(`${originalname}${Date.now()}`, 10).replace(/\//g, '')}.${ext}`)
-  }
-})
 const employeeLimits = {
   fileSize: 1024 * 1024 * 3
 }

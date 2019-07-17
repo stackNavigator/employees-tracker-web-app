@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import * as Excel from 'exceljs/dist/exceljs'
 
 export class PersonalReport extends Component {
   constructor(props) {
@@ -13,9 +14,41 @@ export class PersonalReport extends Component {
     this.props.cancelClick(e, 'personalReport')
   }
 
+  formReport = (header, data) => {
+    const wb = new Excel.Workbook()
+    const ws = wb.addWorksheet('Звіт', { pageSetup: { paperSize: 9, orientation: 'landscape' }
+    })
+    ws.columns = [
+      { width: 32, style: { font: { size: 16}, alignment: { 
+        vertical: 'middle', horizontal: 'center'
+      }, border: {
+        left: {
+            style: 'thin',
+            color: '#000000'
+        },
+        right: {
+            style: 'thin',
+            color: '#000000'
+        },
+        top: {
+            style: 'thin',
+            color: '#000000'
+        },
+        bottom: {
+            style: 'thin',
+            color: '#000000'
+        }
+      }} }
+    ]
+    ws.getCell('A1').value = header
+    for (let i = 0; i < data.length; i++)
+      ws.getCell(`A${i + 2}`).value = data[i]
+    return wb
+  }
+
   handleSubmit = () => {
     this.props.requestStart('personalReport')
-    const [ id, name ] = this.props.id.split(',')
+    const [ id ] = this.props.id.split(',')
     const fromDate = new Date(`${document.querySelector('#fromDate').value || '01/01/1970'},00:00`).toISOString()
     const toDate = new Date(`${document.querySelector('#toDate').value || '01/01/1970'},00:00`).toISOString()
     const query = `?fromDate=${fromDate}&toDate=${toDate}`
@@ -35,9 +68,22 @@ export class PersonalReport extends Component {
     .then(({ reportData: [ data ]}) => {
       const { effectiveSchedule } = data
       if (!effectiveSchedule.length) throw new Error('За наведеними датами інформація відсутня.')
+      const [ _, name ] = this.props.id.split(',')
       const schedule = effectiveSchedule.map(({ range }) => range)
+      return this.formReport(name, schedule).xlsx.writeBuffer()
+    })
+    .then(buffer => {
+      const [fromYear, fromDay, fromMonth] = document.querySelector('#fromDate').value.split('-')
+      const [ toYear, toDay, toMonth ] = document.querySelector('#toDate').value.split('-')
+      const url = window.URL.createObjectURL(new Blob([buffer], {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      }))
+      const anchor = document.createElement('a')
+      anchor.href = url
+      anchor.download = `Звіт з ${fromDay}-${fromMonth}-${fromYear} по ${toDay}-${toMonth}-${toYear}.xlsx`
+      anchor.click()
+      window.URL.revokeObjectURL(url)
       this.props.requestResult('resolved')
-      console.log(schedule)
     })
     .catch(err => err === 'Користувач не авторизований.' 
     ? this.props.requestResult('rejected')
