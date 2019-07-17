@@ -10,6 +10,7 @@ export class Employees extends Component {
       isAdding: false,
       isEditing: false,
       isRemoving: false,
+      isPersonalReporting: false,
       currentKey: null,
       searchField: ''
     }
@@ -24,6 +25,8 @@ export class Employees extends Component {
       this.props.onCrudClick('edit', this.state.currentKey)
     if (this.state.isRemoving)
       this.props.onCrudClick('remove', this.state.currentKey)
+    if (this.state.isPersonalReporting)
+      this.props.onCrudClick('personalReport', this.state.currentKey)
   }
 
   handleAddClick = () => {
@@ -36,6 +39,10 @@ export class Employees extends Component {
 
   handleRemoveClick = key => {
     this.setState({ isAnimating: true, isRemoving: true, currentKey: key })
+  }
+
+  handlePersonalReportClick = key => {
+    this.setState({ isAnimating: true, isPersonalReporting: true, currentKey: key })
   }
 
   handleInputChange = ({ target: { value }}) => {
@@ -60,7 +67,8 @@ export class Employees extends Component {
             ? this.state.employees.map(employee => React.cloneElement(this.props.children[1],
               { ...employee, role: this.props.role, key: employee._id, 
               triggerAnimation: this.triggerAnimation, setEmployees: this.setEmployees,
-              onEditClick: this.handleEditClick, onRemoveClick: this.handleRemoveClick }))
+              onEditClick: this.handleEditClick, onRemoveClick: this.handleRemoveClick,
+               onPersonalReportClick: this.handlePersonalReportClick }))
             : ''}
             {this.props.role === 'hr'
             ? React.cloneElement(this.props.children[2], { onAddClick: this.handleAddClick })

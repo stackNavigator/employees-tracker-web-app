@@ -13,6 +13,10 @@ export class InfoCard extends Component {
     this.props.onRemoveClick(key)
   }
 
+  handelPersonalReportClick = key => {
+    this.props.onPersonalReportClick(key)
+  }
+
   render() {
     return (
       <div className="custom-col center-align">
@@ -40,10 +44,15 @@ export class InfoCard extends Component {
           {this.props.role === 'hr'
           ?
           <div className="card-action">
+            <button className="btn-flat btn-arrival"
+            onClick={() => this.handelPersonalReportClick(`${this.props._id},${this.props.surname} ${this.props.name} ${this.props.secondName}`)}>
+              Сформувати звіт
+              <i className="material-icons right">assignment</i>
+            </button>
             <button className="btn-flat btn-edit" 
             onClick={() => this.handleEditClick(this.props._id)}>
               Редагувати
-              <i className="material-icons right">assignment</i>
+              <i className="material-icons right">arrow_right_alt</i>
             </button>
             <button className="btn-flat btn-delete" 
             onClick={() => this.handleRemoveClick(this.props._id)}>

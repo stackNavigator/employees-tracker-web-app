@@ -8,6 +8,7 @@ export class Switcher extends Component {
       isAdding: false,
       isEditing: false,
       isRemoving: false,
+      isPersonalReporting: false,
       currentId: null
     }
   }
@@ -46,9 +47,12 @@ export class Switcher extends Component {
       case 'add':
         return this.setState(({ isAdding }) => ({ isAdding: !isAdding }))
       case 'edit':
-        return this.setState(({ isEditing }) => ({isEditing: !isEditing, currentId: key }))
+        return this.setState(({ isEditing }) => ({ isEditing: !isEditing, currentId: key }))
       case 'remove':
         return this.setState(({ isRemoving }) => ({ isRemoving: !isRemoving, currentId: key }))
+      case 'personalReport':
+        return this.setState(({ isPersonalReporting }) => ({ isPersonalReporting: !isPersonalReporting,
+          currentId: key}))
       default:
         break
     }
@@ -69,11 +73,14 @@ export class Switcher extends Component {
       case this.state.isRemoving:
         return React.cloneElement(this.props.children[5], { onCrudClick: this.handleCrudClick,
           onSubmit: this.switchRole, id: this.state.currentId })
+      case this.state.isPersonalReporting:
+        return React.cloneElement(this.props.children[6], { onCrudClick: this.handleCrudClick,
+          onSubmit: this.switchRole, id: this.state.currentId })
       case this.state.role === 'guard' || this.state.role === 'hr':
         return React.cloneElement(this.props.children[2], 
           { role: this.state.role, onSubmit: this.switchRole, onCrudClick: this.handleCrudClick })
       case this.state.role === 'admin':
-        return React.cloneElement(this.props.children[6])
+        return React.cloneElement(this.props.children[7])
       default:
         break
     }

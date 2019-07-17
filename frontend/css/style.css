@@ -1,5 +1,6 @@
 input[type=text]:not(.browser-default):focus:not([readonly]), 
-input[type=password]:not(.browser-default):focus:not([readonly]) {
+input[type=password]:not(.browser-default):focus:not([readonly]),
+input[type=date]:not(.browser-default):focus:not([readonly]) {
   border-bottom: 1px solid #3399ff;
   box-shadow: 0 1px 0 0 #3399ff;
 }
@@ -51,22 +52,22 @@ input[type=password]:not(.browser-default):focus:not([readonly]) {
   width: 75%;
 }
 
-.btn-edit:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating),
-.btn-departure:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating) {
+.btn-edit:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating) {
   color: #3399ff;
 }
 
-.btn-edit:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating):hover,
-.btn-departure:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating):hover {
+.btn-edit:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating):hover {
   background-color: #3399ff;
   color: #ffffff;
 }
 
-.btn-delete:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating), .reject-tooltip {
+.btn-delete:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating), .reject-tooltip,
+.btn-departure:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating) {
   color: #ff0000;
 }
 
-.btn-delete:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating):hover {
+.btn-delete:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating):hover,
+.btn-departure:not(.btn):not(.btn-large):not(.btn-large):not(.btn-floating):hover {
   background-color: #ff0000;
   color: #ffffff;
 }

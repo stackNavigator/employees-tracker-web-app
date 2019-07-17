@@ -22,6 +22,7 @@ export class RemoveEmployee extends Component {
         throw 'Користувач не авторизований.'
       if (res.status === 500)
         throw res.json()
+      return res.json()
     })
     .then(() => this.props.requestResult('resolved'))
     .catch(err => err === 'Користувач не авторизований.' 
@@ -32,27 +33,27 @@ export class RemoveEmployee extends Component {
   render() {
     return (
       <div>
-      <h3 className="center-align">{this.props.text}</h3>
-      <div className="row">
-        <br />
-        <h5 className="col s12 center-align">Ви впевнені у видаленні?</h5>
-        {this.props.isActive
-        ?
-        <div className="col s12 center-align">
-          <div className="col s12 m6 center-align">
-            <button className="btn-flat btn-edit" onClick={this.handleSubmit}>
-              Підтвердити
-            </button>
+        <h3 className="center-align">{this.props.text}</h3>
+        <div className="row">
+          <br />
+          <h5 className="col s12 center-align">Ви впевнені у видаленні?</h5>
+          {this.props.isActive
+          ?
+          <div className="col s12 center-align">
+            <div className="col s12 m6 center-align">
+              <button className="btn-flat btn-edit" onClick={this.handleSubmit}>
+                Підтвердити
+              </button>
+            </div>
+            <div className="col s12 m6 center-align">
+              <button className="btn-flat btn-delete" onClick={this.handleCancelClick}>
+                Скасувати
+              </button>
+            </div>
           </div>
-          <div className="col s12 m6 center-align">
-            <button className="btn-flat btn-delete" onClick={this.handleCancelClick}>
-              Скасувати
-            </button>
-          </div>
+          : ''}
         </div>
-        : ''}
       </div>
-    </div>
     )
   }
 }

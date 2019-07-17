@@ -16,6 +16,7 @@ import { AddButton } from './components/AddButton'
 import { InputForm } from './components/InputForm'
 import { RemoveEmployee } from './components/RemoveEmployee'
 import { TriggerScheduleButton } from './components/TriggerScheduleButton'
+import { PersonalReport } from './components/PersonalReport'
 
 ReactDOM.render(
   <Switcher url="http://localhost:3502/api/check-access">
@@ -49,8 +50,12 @@ ReactDOM.render(
       crud="edit"/>
     </RequestableUI>
     <RequestableUI url="http://localhost:3502/api/employee">
-      <Loader color="blue" />
-      <RemoveEmployee text="Видалення працівника" />
+      <Loader color="blue"/>
+      <RemoveEmployee text="Видалення працівника"/>
+    </RequestableUI>
+    <RequestableUI url="http://localhost:3502/api/employee">
+      <Loader color="blue"/>
+      <PersonalReport text="Формування персонального звіту"/>
     </RequestableUI>
     <Admin />
   </Switcher>,
