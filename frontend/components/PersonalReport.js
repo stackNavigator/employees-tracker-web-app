@@ -16,7 +16,7 @@ export class PersonalReport extends Component {
 
   formReport = (header, data) => {
     const wb = new Excel.Workbook()
-    const ws = wb.addWorksheet('Звіт', { pageSetup: { paperSize: 9, orientation: 'landscape' }
+    const ws = wb.addWorksheet('Звіт', { pageSetup: { paperSize: 9 }
     })
     ws.columns = [
       { width: 32, style: { font: { size: 16}, alignment: { 
