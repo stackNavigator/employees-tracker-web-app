@@ -51,7 +51,6 @@ export class PersonalReport extends Component {
     const [ id ] = this.props.id.split(',')
     const fromDate = new Date(`${document.querySelector('#fromDate').value || '01/01/1970'},03:00`).toISOString()
     const toDate = new Date(`${document.querySelector('#toDate').value || '01/01/1970'},03:00`).toISOString()
-    console.log(fromDate, toDate)
     const query = `?fromDate=${fromDate}&toDate=${toDate}`
     fetch(`${this.props.url}/${id}/personal-report${query}`, {
       method: 'GET',

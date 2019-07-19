@@ -185,7 +185,6 @@ module.exports = class {
     if (!doc) throw new NotFoundError('Employee was not found.')
     const castedFromDate = new Date(fromDate)
     const castedToDate = new Date(toDate)
-    console.log(castedFromDate, castedToDate)
     const newToDate = new Date(castedToDate.setDate(castedToDate.getDate() + 1))
     return await this.dbClient.aggregate([
       { $match: { _id: ObjectId(id) } },
