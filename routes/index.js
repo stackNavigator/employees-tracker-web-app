@@ -8,7 +8,7 @@ module.exports = () => {
   return Router()
     .post('/signin', models['user'].signIn())
     .get('/check-access', checkAccess())
-    //.use(checkAuth())
+    .use(checkAuth())
     .get('/employees', models['employee'].getEmployees())
     .post('/employees', uploadEmployeeImage('profilePic'), models['employee'].createEmployee())
     .patch('/employee/:id', uploadEmployeeImage('profilePic'), models['employee'].updateEmployee())
