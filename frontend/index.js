@@ -19,13 +19,13 @@ import { TriggerScheduleButton } from './components/TriggerScheduleButton'
 import { PersonalReport } from './components/PersonalReport'
 
 ReactDOM.render(
-  <Switcher url="http://localhost:3502/api/check-access">
+  <Switcher url="https://employees-tracker.herokuapp.com/api/check-access">
     <Loader color="blue"/>
-    <SignIn text="Вхід до системи" url="http://localhost:3502/api/signin">
+    <SignIn text="Вхід до системи" url="https://employees-tracker.herokuapp.com/api/signin">
       <Loader color="blue"/>
     </SignIn>
     <Employees>
-      <SearchField url="http://localhost:3502/api/employees">
+      <SearchField url="https://employees-tracker.herokuapp.com/api/employees">
         <Loader color="blue"/>
       </SearchField>
       <InfoCard>
@@ -35,25 +35,25 @@ ReactDOM.render(
       </InfoCard>
       <AddButton />
     </Employees>
-    <RequestableUI url="http://localhost:3502/api/employees">
+    <RequestableUI url="https://employees-tracker.herokuapp.com/api/employees">
       <Loader color="blue"/>
       <InputForm 
       text="Внесення працівника"
       method="POST"
       crud="add"/>
     </RequestableUI>
-    <RequestableUI url="http://localhost:3502/api/employee">
+    <RequestableUI url="https://employees-tracker.herokuapp.com/api/employee">
       <Loader color="blue"/>
       <InputForm 
       text="Редагування працівника"
       method="PATCH"
       crud="edit"/>
     </RequestableUI>
-    <RequestableUI url="http://localhost:3502/api/employee">
+    <RequestableUI url="https://employees-tracker.herokuapp.com/api/employee">
       <Loader color="blue"/>
       <RemoveEmployee text="Видалення працівника"/>
     </RequestableUI>
-    <RequestableUI url="http://localhost:3502/api/employee">
+    <RequestableUI url="https://employees-tracker.herokuapp.com/api/employee">
       <Loader color="blue"/>
       <PersonalReport text="Формування персонального звіту"/>
     </RequestableUI>

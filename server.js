@@ -9,8 +9,7 @@ const { handleErrors } = require('./services/handle-errors')
 
 ;(async () => {
   try {
-    require('dotenv').config()
-    const { PORT, DB_URI } = process.env
+    const { DB_URI, PORT } = process.env
     await connect(DB_URI)
     
     express()

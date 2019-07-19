@@ -9,7 +9,6 @@ const employeeSchemas = {
   add: 'employees-tracker/employee-add',
   patch: 'employees-tracker/employee-patch'
 }
-require('dotenv').config()
 
 const s3 = new aws.S3({
   accessKeyId: process.env.ACCESS_KEY_ID,
