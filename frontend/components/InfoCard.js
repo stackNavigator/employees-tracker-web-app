@@ -35,8 +35,8 @@ export class InfoCard extends Component {
           {this.props.role === 'guard' 
           ?
           <div className="card-action">
-            {React.cloneElement(this.props.children, { 
-            url: `https://employees-tracker.herokuapp.com//api/schedule/${this.props._id}`,
+            {React.cloneElement(this.props.children, {
+            url: `https://employees-tracker.herokuapp.com/api/schedule/${this.props._id}`,
             arrivalUrl: `https://employees-tracker.herokuapp.com/api/schedule/${this.props._id}/check-arrival`,
             triggerAnimation: this.props.triggerAnimation, setEmployees: this.props.setEmployees })}
           </div>
