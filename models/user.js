@@ -57,7 +57,7 @@ module.exports = class {
     if (!bcrypt.compareSync(password, existingUser.password)) throw new AuthorizationError()
     const { _id, role } = existingUser
     return {
-      token: await jwt.sign({ _id }, process.env.JWT_SECRET_KEY, { expiresIn: 60 }),
+      token: await jwt.sign({ _id }, process.env.JWT_SECRET_KEY, { expiresIn: '24h' }),
       role
     }
   }

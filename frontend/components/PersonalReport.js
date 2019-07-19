@@ -73,8 +73,8 @@ export class PersonalReport extends Component {
       return this.formReport(name, schedule).xlsx.writeBuffer()
     })
     .then(buffer => {
-      const [fromYear, fromDay, fromMonth] = document.querySelector('#fromDate').value.split('-')
-      const [ toYear, toDay, toMonth ] = document.querySelector('#toDate').value.split('-')
+      const [fromYear, fromMonth, fromDay] = document.querySelector('#fromDate').value.split('-')
+      const [ toYear, toMonth, toDay ] = document.querySelector('#toDate').value.split('-')
       const url = window.URL.createObjectURL(new Blob([buffer], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       }))

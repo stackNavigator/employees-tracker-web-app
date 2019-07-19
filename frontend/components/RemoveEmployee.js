@@ -22,7 +22,7 @@ export class RemoveEmployee extends Component {
         throw 'Користувач не авторизований.'
       if (res.status === 500)
         throw res.json()
-      return res.json()
+      return res
     })
     .then(() => this.props.requestResult('resolved'))
     .catch(err => err === 'Користувач не авторизований.' 
