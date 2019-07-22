@@ -38,8 +38,9 @@ export class SearchField extends Component {
     if (this.validateInput(name))
       this.setState({
         searchTimeout: setTimeout(() => {
-          this.handleLoading(this.props.searchField)
-        }, 1500)
+          const { searchField } = this.props
+          this.handleLoading(searchField.charAt(0).toUpperCase() + searchField.slice(1))
+        }, 2000)
       })
   }
 
