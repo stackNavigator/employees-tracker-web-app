@@ -39,7 +39,7 @@ export class SearchField extends Component {
       this.setState({
         searchTimeout: setTimeout(() => {
           this.handleLoading(this.props.searchField)
-        }, 1000)
+        }, 1500)
       })
   }
 

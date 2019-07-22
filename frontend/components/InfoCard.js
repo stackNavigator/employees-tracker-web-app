@@ -49,10 +49,10 @@ export class InfoCard extends Component {
               Сформувати звіт
               <i className="material-icons right">assignment</i>
             </button>
-            <button className="btn-flat btn-edit" 
+            <button className="btn-flat btn-edit"
             onClick={() => this.handleEditClick(this.props._id)}>
               Редагувати
-              <i className="material-icons right">arrow_right_alt</i>
+              <i className="material-icons right">trending_flat</i>
             </button>
             <button className="btn-flat btn-delete" 
             onClick={() => this.handleRemoveClick(this.props._id)}>
