@@ -2,6 +2,9 @@
   "name": "employees-tracker-web-app",
   "version": "0.0.1",
   "description": "Web app purposed for tracking employees.",
+  "engines": {
+    "node": "11.6.0"
+  },
   "main": "server.js",
   "scripts": {
     "test": "jest tests/employee --detectOpenHandles",
