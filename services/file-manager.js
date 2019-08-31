@@ -18,7 +18,7 @@ const employeeStorage = multerS3({
   s3,
   bucket: `${process.env.BUCKET_NAME}/profilePics`,
   acl: 'public-read',
-  cacheControl: 'max-age=8035200',
+  cacheControl: 'max-age=10',
   key: (_, file, cb) => {
     const { mimetype, originalname } = file
     const [ __, ext ] = mimetype.split('/')
