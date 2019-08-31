@@ -28,7 +28,7 @@
     "react-dom": "^16.8.6"
   },
   "engines": {
-    "node": "11.x"
+    "node": "10.x"
   },
   "devDependencies": {
     "@babel/core": "^7.4.5",
