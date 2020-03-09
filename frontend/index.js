@@ -18,44 +18,47 @@ import { RemoveEmployee } from './components/RemoveEmployee'
 import { TriggerScheduleButton } from './components/TriggerScheduleButton'
 import { PersonalReport } from './components/PersonalReport'
 
+const testUrlBase = `http://localhost:3502`
+const urlBase = `https://employees-tracker.herokuapp.com`
+
 ReactDOM.render(
-  <Switcher url="https://employees-tracker.herokuapp.com/api/check-access">
-    <Loader color="blue"/>
-    <SignIn text="Вхід до системи" url="https://employees-tracker.herokuapp.com/api/signin">
-      <Loader color="blue"/>
+  <Switcher url={`${testUrlBase}/api/check-access`}>
+    <Loader color="blue" />
+    <SignIn text="Вхід до системи" url={`${testUrlBase}/api/signin`}>
+      <Loader color="blue" />
     </SignIn>
     <Employees>
-      <SearchField url="https://employees-tracker.herokuapp.com/api/employees">
-        <Loader color="blue"/>
+      <SearchField url={`${testUrlBase}/api/employees`}>
+        <Loader color="blue" />
       </SearchField>
-      <InfoCard>
+      <InfoCard url={`${testUrlBase}/api/schedule`}>
         <TriggerScheduleButton>
-          <Loader color="blue"/>
+          <Loader color="blue" />
         </TriggerScheduleButton>
       </InfoCard>
       <AddButton />
     </Employees>
-    <RequestableUI url="https://employees-tracker.herokuapp.com/api/employees">
-      <Loader color="blue"/>
-      <InputForm 
-      text="Внесення працівника"
-      method="POST"
-      crud="add"/>
+    <RequestableUI url={`${testUrlBase}/api/employees`}>
+      <Loader color="blue" />
+      <InputForm
+        text="Внесення працівника"
+        method="POST"
+        crud="add" />
     </RequestableUI>
-    <RequestableUI url="https://employees-tracker.herokuapp.com/api/employee">
-      <Loader color="blue"/>
-      <InputForm 
-      text="Редагування працівника"
-      method="PATCH"
-      crud="edit"/>
+    <RequestableUI url={`${testUrlBase}/api/employee`}>
+      <Loader color="blue" />
+      <InputForm
+        text="Редагування працівника"
+        method="PATCH"
+        crud="edit" />
     </RequestableUI>
-    <RequestableUI url="https://employees-tracker.herokuapp.com/api/employee">
-      <Loader color="blue"/>
-      <RemoveEmployee text="Видалення працівника"/>
+    <RequestableUI url={`${testUrlBase}/api/employee`}>
+      <Loader color="blue" />
+      <RemoveEmployee text="Видалення працівника" />
     </RequestableUI>
-    <RequestableUI url="https://employees-tracker.herokuapp.com/api/employee">
-      <Loader color="blue"/>
-      <PersonalReport text="Формування персонального звіту"/>
+    <RequestableUI url={`${testUrlBase}/api/employee`}>
+      <Loader color="blue" />
+      <PersonalReport text="Формування персонального звіту" />
     </RequestableUI>
     <Admin />
   </Switcher>,

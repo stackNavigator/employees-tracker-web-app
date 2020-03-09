@@ -9,8 +9,9 @@ const { handleErrors } = require('./services/handle-errors')
 
 ;(async () => {
   try {
-    const { DB_URI, PORT } = process.env
-    await connect(DB_URI)
+    require('dotenv').config()
+    const { TEST_DB_URI, PORT } = process.env
+    await connect(TEST_DB_URI)
     
     express()
       .use(cors())

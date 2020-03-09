@@ -2,6 +2,7 @@ const multer = require('multer')
 const multerS3 = require('multer-s3')
 const aws = require('aws-sdk')
 const bcrypt = require('bcrypt')
+require('dotenv').config()
 
 const { validate } = require('./validator')
 const { ValidationError, UnsupportedMedia } = require('./handle-errors')
@@ -11,17 +12,17 @@ const employeeSchemas = {
 }
 
 const s3 = new aws.S3({
-  accessKeyId: process.env.ACCESS_KEY_ID,
-  secretAccessKey: process.env.SECRET_ACCESS_KEY
+  accessKeyId: process.env.TEST_ACCESS_KEY_ID,
+  secretAccessKey: process.env.TEST_SECRET_ACCESS_KEY
 })
 const employeeStorage = multerS3({
   s3,
-  bucket: `${process.env.BUCKET_NAME}/profilePics`,
+  bucket: `${process.env.TEST_BUCKET_NAME}/profilePics`,
   acl: 'public-read',
   cacheControl: 'max-age=10',
   key: (_, file, cb) => {
     const { mimetype, originalname } = file
-    const [ __, ext ] = mimetype.split('/')
+    const [__, ext] = mimetype.split('/')
     cb(null, `${bcrypt.hashSync(`${originalname}${Date.now()}`, 10).replace(/\//g, '')}.${ext}`)
   }
 })
@@ -49,12 +50,12 @@ const employeeImgUploader = multer({
 })
 
 module.exports = {
-  uploadEmployeeImage (field) {
+  uploadEmployeeImage(field) {
     return employeeImgUploader.single(field)
   },
-  async deleteEmployeeImage (name) {
+  async deleteEmployeeImage(name) {
     await s3.deleteObject({
-      Bucket: `${process.env.BUCKET_NAME}`,
+      Bucket: `${process.env.TEST_BUCKET_NAME}`,
       Key: `profilePics/${name}`
     }).promise()
   }

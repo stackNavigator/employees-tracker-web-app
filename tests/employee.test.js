@@ -8,7 +8,7 @@ let idToUpdate = null
 describe('Test employees model functionality.', () => {
   beforeAll(async () => {
     require('dotenv').config()
-    await connect(process.env.DB_URI)
+    await connect(process.env.TEST_DB_URI)
     await models['employee'].dbClient.deleteMany()
   })
 

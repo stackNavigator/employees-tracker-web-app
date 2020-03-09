@@ -42,7 +42,7 @@ module.exports = class {
     if (!file) throw new ValidationError('File was not included.')
     const { key } = file
     const { insertedId } = await this.dbClient.insertOne({
-      profilePic: `https://employees-tracker-media.s3.amazonaws.com/profilePics/${key}`,
+      profilePic: `https://test-employees-tracker-media.s3.amazonaws.com/profilePics/${key}`,
       ...payload,
       hasArrived: null,
       effectiveSchedule: []
