@@ -69,7 +69,7 @@ module.exports = class {
     if (!doc) throw new NotFoundError('Employee was not found.')
     if (file) {
       const { key } = file
-      payload.profilePic = `https://employees-tracker-media.s3.amazonaws.com/profilePics/${key}`
+      payload.profilePic = `https://test-employees-tracker-media.s3.amazonaws.com/profilePics/${key}`
       const { profilePic } = doc
       await deleteEmployeeImage(profilePic.slice(profilePic.lastIndexOf('/') + 1))
     }
