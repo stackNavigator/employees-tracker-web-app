@@ -8,10 +8,10 @@
 
 ``` bash
 # clone the repository
-$ git clone repo-name
+$ git clone https://github.com/mindfr1k/employees-tracker-web-app.git
 
 # change directory to current repository location
-$ cd repo-name
+$ cd employees-tracker-web-app
 
 # install dependencies
 $ npm i
